@@ -1,0 +1,324 @@
+import React, { Component } from 'react'
+import { render, RenderResult, screen, waitFor, within } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
+import { JsonDataSource, Model, persistent, Persistent, registerPersistentClass, Store } from 'entropic-bond'
+import { CrudContentViewProps, CrudPanel, CrudPanelLabels, CrudCardProps, Layout } from './crud-panel'
+import { CrudController } from './crud-controller'
+
+const crudLabels: CrudPanelLabels = {
+	addNewDocumentLabel: 'Add new document',
+	addButtonLabel: 'Add',
+	updateButtonLabel: 'Update',
+	documentsInCollectionCaption: 'Existing documents',
+	noDocumentsFoundLabel: 'No documents found',
+}
+
+const testViewPlaceholder = 'Test View Placeholder'
+const editButtonLabel = 'Edit'
+const deleteButtonLabel = 'Delete'
+const cancelButtonCaption = 'Cancel'
+const viewHeader = 'View header'
+
+const mockData = {
+	Test: {
+		test1:{
+			__className: 'Test',
+			id: 'test1',
+			testProp: 'Test prop 1'
+		},
+		test2:{
+			__className: 'Test',
+			id: 'test2',
+			testProp: 'Test prop 2'
+		}
+	}
+}
+
+@registerPersistentClass( 'Test' )
+class Test extends Persistent {
+	set testProp( value: string ) {
+		this._testProp = value
+	}
+	
+	get testProp(): string {
+		return this._testProp
+	}
+	
+	@persistent private _testProp: string
+}
+
+class TestController extends CrudController<Test> {
+	constructor() {
+		super( new Test() )
+	}
+
+	protected getModel(): Model<Test> {
+		return Store.getModel( 'Test' )
+	}
+}
+
+class TestView extends Component<Partial<CrudContentViewProps<Test>>> {
+	render() {
+		const { controller, onCancel, onSubmit, submitButtonCaption } = this.props
+
+		return (
+			<div>
+				<h1>{ viewHeader }</h1>
+				<input 
+					placeholder={ testViewPlaceholder }
+					value={ controller.document.testProp } 
+					onChange={ e => controller.document.testProp = e.target.value } 
+				/>
+				<button onClick={ ()=>onSubmit( controller.document ) }>{ submitButtonCaption }</button>
+				<button onClick={ onCancel }>{ cancelButtonCaption }</button>
+			</div>
+		)
+	}
+}
+
+class TestCard extends Component<Partial<CrudCardProps<Test>>> {
+	render() {
+		const { document, onDelete, onSelect } = this.props
+
+		return (
+			<div>
+				<p>{ document?.testProp }</p>
+				<button onClick={ ()=>onSelect( document ) }>{ editButtonLabel }</button>
+				<button onClick={ ()=>onDelete( document ) }>{ deleteButtonLabel }</button>
+			</div>  
+		)
+	}
+}
+
+describe( 'Crud Panel', ()=>{
+	let controller: TestController
+	let notifySpy: jest.Mock<any, any>
+	let renderResult: RenderResult
+
+	beforeEach( async ()=>{
+		Store.useDataSource( new JsonDataSource({ ...mockData }) )
+		controller = new TestController()
+		notifySpy = jest.fn()
+		controller.onChange( notifySpy )
+
+		renderResult = render(
+			<CrudPanel controller={ controller } labels={ crudLabels }>
+				<TestView />
+				<TestCard />
+			</CrudPanel>
+		)
+
+		await screen.findByText( crudLabels.addNewDocumentLabel )
+	})
+
+	it( 'should show existing documents', ()=>{
+		const docs = screen.getByRole( 
+			'heading', { name: crudLabels.documentsInCollectionCaption }
+		).nextElementSibling as HTMLElement
+
+
+		expect( within( docs ).getByText( 'Test prop 1' )	).toBeInTheDocument()
+		expect( within( docs ).getByText( 'Test prop 2' )	).toBeInTheDocument()
+		expect( docs.children.length ).toBe( 2 )
+	})
+
+	describe( 'Accepts children as functions', ()=>{
+		beforeEach(() => {
+			renderResult.rerender(
+				<CrudPanel controller={ controller } labels={ crudLabels } layout={'formAndItems'}>
+					{ props => <TestView {...props}/> }
+					{ props => <TestCard {...props}/> }
+				</CrudPanel>
+			)
+		})
+
+		it( 'should show panels', ()=>{
+			expect( screen.getByPlaceholderText( testViewPlaceholder ) ).toBeInTheDocument()
+			expect( screen.getAllByRole( 'button', { name: editButtonLabel })[0] ).toBeInTheDocument()
+			expect( screen.getAllByRole( 'button', { name: deleteButtonLabel })[0] ).toBeInTheDocument()
+		})
+	
+	})
+
+	describe( 'Working with TestView', ()=> {
+		
+		it( 'should create an empty document view on add new document button click', ()=>{
+			userEvent.click( screen.getByRole( 'button', { name: crudLabels.addNewDocumentLabel } ) )
+
+			expect( screen.getByRole( 'heading', { name: viewHeader }) ).toBeInTheDocument()
+			expect( 
+				screen.getByPlaceholderText( testViewPlaceholder ) 
+			).toHaveDisplayValue('')
+		})
+
+		it( 'should show detail view with document data on edit button click', ()=>{
+			const testDoc = mockData.Test.test1
+			const editButton = screen.getAllByRole( 'button', { name: editButtonLabel } )
+			userEvent.click( editButton[0] )
+
+			expect( screen.getByRole( 'heading', { name: viewHeader }) ).toBeInTheDocument()
+			expect( screen.getByDisplayValue( testDoc.testProp ) ).toBeInTheDocument()
+		})
+
+		it( 'should refresh document list on new document added', async ()=>{
+			userEvent.click( screen.getByRole( 'button', { name: crudLabels.addNewDocumentLabel} ))
+
+			const input = await screen.findByPlaceholderText( testViewPlaceholder )
+			userEvent.type( input, 'New and fancy Application' )
+
+			userEvent.click( screen.getByRole( 'button', { name: crudLabels.addButtonLabel } ) )
+			const docs = screen.getByRole( 
+				'heading', { name: crudLabels.documentsInCollectionCaption }
+			).nextElementSibling as HTMLElement
+			expect( 
+				await within( docs ).findByText( 'New and fancy Application' )
+			).toBeInTheDocument()
+		})
+	})
+
+	describe( 'Working with detail card buttons', ()=> {
+
+		it( 'should refresh document list on document edited', async ()=>{
+			const editButton = screen.getAllByRole( 'button', { name: editButtonLabel } )
+			userEvent.click( editButton[0] )
+
+			const input = await screen.findByPlaceholderText( testViewPlaceholder )
+			userEvent.paste( input, ' Edited' )
+			userEvent.click( screen.getByRole( 'button', { name: crudLabels.updateButtonLabel } ) )
+			await waitFor( ()=>expect( notifySpy ).toHaveBeenCalled() )
+
+			const docs = screen.getByRole( 
+				'heading', { name: crudLabels.documentsInCollectionCaption }
+			).nextElementSibling as HTMLElement
+			expect( 
+				await within( docs ).findByText( 'Test prop 1 Edited' )
+			).toBeInTheDocument()
+		})
+
+		it( 'should delete document and remove from the list', async ()=>{
+			expect( screen.queryByText( 'Test prop 2' ) ).toBeInTheDocument()
+
+			const deleteButton = screen.getAllByRole( 'button', { name: deleteButtonLabel } )
+			userEvent.click( deleteButton[1] )
+			await waitFor( ()=>expect( notifySpy ).toHaveBeenCalled() )
+
+			expect( screen.queryByText( 'Test prop 2' ) ).not.toBeInTheDocument()
+		})
+
+	})
+
+	describe( 'Layout behaviour', ()=>{
+		const itemsView = ()=>screen.queryByRole( 'heading', { name: crudLabels.documentsInCollectionCaption } )
+		const formView = ()=>screen.queryByRole( 'heading', { name: viewHeader } )
+		const addButton = ()=>screen.getByRole( 'button', { name: crudLabels.addNewDocumentLabel } )
+		const renderWith = async ( layout: Layout ) => {
+			renderResult.rerender(
+				<CrudPanel controller={ controller } labels={ crudLabels } layout={ layout }>
+					<TestView />
+					{ ( props: CrudCardProps<Test> ) => (
+							<div>
+								<p>{ props.document.testProp }</p>
+								<button onClick={ ()=>props.onSelect( props.document ) }>
+									{ editButtonLabel }
+								</button>
+								<button onClick={ ()=>props.onDelete( props.document ) }>
+									{ deleteButtonLabel }
+								</button>
+							</div>  
+					)}
+				</CrudPanel>
+			)
+			await screen.findByText( crudLabels.addNewDocumentLabel )
+		}
+
+
+		it( 'should show always collection items when default layout', ()=>{
+			expect( itemsView() ).toBeInTheDocument()
+			expect(	formView() ).not.toBeInTheDocument()
+
+			userEvent.click( addButton() )
+
+			expect( itemsView() ).toBeInTheDocument()
+			expect(	formView() ).toBeInTheDocument()
+		})
+
+		it( 'should show always collection items when layout set to itemsAlways', ()=>{
+			renderWith( 'itemsAlways' )
+			expect( itemsView() ).toBeInTheDocument()
+			expect(	formView() ).not.toBeInTheDocument()
+
+			userEvent.click( addButton() )
+
+			expect( itemsView() ).toBeInTheDocument()
+			expect(	formView() ).toBeInTheDocument()
+		})
+
+		it( 'should show always form view when layout set to formAlways', ()=>{
+			renderWith( 'formAlways' )
+			expect( itemsView() ).toBeInTheDocument()
+			expect(	formView() ).toBeInTheDocument()
+
+			userEvent.click( addButton() )
+
+			expect( itemsView() ).not.toBeInTheDocument()
+			expect(	formView() ).toBeInTheDocument()
+		})
+
+		it( 'should show always form view and items view when layout set to formAndItems', ()=>{
+			renderWith( 'formAndItems' )
+			expect( itemsView() ).toBeInTheDocument()
+			expect(	formView() ).toBeInTheDocument()
+
+			userEvent.click( addButton() )
+
+			expect( itemsView() ).toBeInTheDocument()
+			expect(	formView() ).toBeInTheDocument()
+		})
+
+		it( 'should alternate from form view to items view but not both when layout set to formOrItems', ()=>{
+			renderWith( 'formOrItems' )
+			expect( itemsView() ).toBeInTheDocument()
+			expect(	formView() ).not.toBeInTheDocument()
+
+			userEvent.click( addButton() )
+
+			expect( itemsView() ).not.toBeInTheDocument()
+			expect(	formView() ).toBeInTheDocument()
+		})
+
+	})
+
+	it( 'should allow to pass labels as a function', async ()=>{
+		const labels = ( controller: CrudController<Test> ) => Object.entries( crudLabels )
+		.reduce( ( prev, [ key, label ] ) => {
+			prev[ key ] = `${ label } ${ controller.document.className }`
+			return prev
+		},{}) as CrudPanelLabels
+
+		renderResult.rerender(
+			<CrudPanel controller={ controller } labels={ labels }>
+				<TestView />
+				{ ( props: CrudCardProps<Test> ) => (
+						<div>
+							<p>{ props.document.testProp }</p>
+							<button onClick={ ()=>props.onSelect( props.document ) }>
+								{ editButtonLabel }
+							</button>
+							<button onClick={ ()=>props.onDelete( props.document ) }>
+								{ deleteButtonLabel }
+							</button>
+						</div>  
+				)}
+			</CrudPanel>
+		)
+		await screen.findByText( crudLabels.addNewDocumentLabel, { exact: false })
+
+		expect( 
+			screen.getByText( `${ crudLabels.addNewDocumentLabel } ${ controller.document.className }` ) 
+		).toBeInTheDocument()
+		expect( 
+			screen.getByText( `${ crudLabels.documentsInCollectionCaption } ${ controller.document.className }` ) 
+		).toBeInTheDocument()
+	})
+	
+})
