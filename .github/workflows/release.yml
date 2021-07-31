@@ -1,4 +1,4 @@
-name: Localize React Release
+name: Crud panel React Release
 
 on:
   push:

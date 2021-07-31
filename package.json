@@ -66,5 +66,8 @@
     "hooks": {
       "pre-push": "if git-branch-is master; then npm test; fi"
     }
+  },
+  "dependencies": {
+    "entropic-bond": "^1.9.9"
   }
 }
