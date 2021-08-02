@@ -107,8 +107,6 @@ describe( 'Crud Panel', ()=>{
 				<TestCard />
 			</CrudPanel>
 		)
-
-		await screen.findByText( crudLabels.addNewDocumentLabel )
 	})
 
 	it( 'should show existing documents', ()=>{
@@ -228,9 +226,7 @@ describe( 'Crud Panel', ()=>{
 					)}
 				</CrudPanel>
 			)
-			await screen.findByText( crudLabels.addNewDocumentLabel )
 		}
-
 
 		it( 'should show always collection items when default layout', ()=>{
 			expect( itemsView() ).toBeInTheDocument()
@@ -253,24 +249,8 @@ describe( 'Crud Panel', ()=>{
 			expect(	formView() ).toBeInTheDocument()
 		})
 
-		it( 'should show always form view when layout set to formAlways', ()=>{
-			renderWith( 'formAlways' )
-			expect( itemsView() ).toBeInTheDocument()
-			expect(	formView() ).toBeInTheDocument()
-
-			userEvent.click( addButton() )
-
-			expect( itemsView() ).not.toBeInTheDocument()
-			expect(	formView() ).toBeInTheDocument()
-		})
-
 		it( 'should show always form view and items view when layout set to formAndItems', ()=>{
 			renderWith( 'formAndItems' )
-			expect( itemsView() ).toBeInTheDocument()
-			expect(	formView() ).toBeInTheDocument()
-
-			userEvent.click( addButton() )
-
 			expect( itemsView() ).toBeInTheDocument()
 			expect(	formView() ).toBeInTheDocument()
 		})
@@ -311,7 +291,6 @@ describe( 'Crud Panel', ()=>{
 				)}
 			</CrudPanel>
 		)
-		await screen.findByText( crudLabels.addNewDocumentLabel, { exact: false })
 
 		expect( 
 			screen.getByText( `${ crudLabels.addNewDocumentLabel } ${ controller.document.className }` ) 

@@ -40,6 +40,7 @@ interface CrudPanelProps<T extends Persistent> {
 		( ( props: CrudContentViewProps<T> ) => ReactElement ) | ReactElement<CrudContentViewProps<T>>,
 		( ( props: CrudCardProps<T> ) => ReactElement ) | ReactElement<CrudCardProps<T>>
 	]
+	className?: string
 }
 
 export class CrudPanel<T extends Persistent> extends Component<CrudPanelProps<T>, CrudPanelState<T>> {
@@ -92,26 +93,36 @@ export class CrudPanel<T extends Persistent> extends Component<CrudPanelProps<T>
 		})
 	}
 
-	private storeDocument( document: T ) {
-		const { controller } = this.props
+	private async storeDocument( document: T ) {
+		const { controller, layout } = this.props
 		
-		controller.storeDocument( document )
-		this.setState({
-			mode: Mode.normal
-		})
+		await controller.storeDocument( document )
+
+		if ( layout === 'formAlways' || layout === 'formAndItems' ) {
+			this.newDocument()
+		}
+		else {
+			this.setState({
+				mode: Mode.normal
+			})
+		}
 	}
 
 	private invokeContentViewChild( labels : CrudPanelLabels ) {
-		const { children, controller } = this.props
+		const { children, controller, layout } = this.props
 		const { mode } = this.state
 		const { addButtonLabel, updateButtonLabel } = labels
+		const closeOnCancel = layout!=='formAlways' && layout !== 'formAndItems'
+		
 
 		const props: CrudContentViewProps<T> = {
 			controller,
-			submitButtonCaption: mode==Mode.add? addButtonLabel : updateButtonLabel,
+			submitButtonCaption: mode==Mode.edit? updateButtonLabel : addButtonLabel,
 			onSubmit: ( document: T ) => this.storeDocument( document ),
-			onCancel: ()=>this.setState({ mode: Mode.normal }) 
-		} 
+			onCancel: closeOnCancel
+				? ()=>this.setState({ mode: Mode.normal })
+				: ()=>this.newDocument()
+		}
 
 		if ( typeof children[0] === 'function' ) {
 			return cloneElement( children[0] (props), { key: controller.document.id })
@@ -140,7 +151,7 @@ export class CrudPanel<T extends Persistent> extends Component<CrudPanelProps<T>
 
 	render() {
 		const { mode, documents } = this.state
-		const { controller } = this.props
+		const { controller, className } = this.props
 		let labels = this.props.labels
 		const layout = this.props.layout || 'itemsAlways'
 
@@ -149,8 +160,8 @@ export class CrudPanel<T extends Persistent> extends Component<CrudPanelProps<T>
 		const { addNewDocumentLabel, documentsInCollectionCaption, noDocumentsFoundLabel } = labels
 
 		return (
-			<div className={`crud-panel`}>
-				{ mode === Mode.normal && 
+			<div className={`crud-panel ${ className || '' }`}>
+				{ mode === Mode.normal && layout !== 'formAlways' && layout !== 'formAndItems' &&
 
 					<button onClick={ ()=> this.newDocument() }>
 						{	addNewDocumentLabel	}
