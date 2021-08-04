@@ -1,3 +1,10 @@
+# [1.1.0](https://github.com/entropic-bond/crud-panel/compare/v1.0.1...v1.1.0) (2021-08-04)
+
+
+### Features
+
+* crudPanel accecepts css classname ([5c375b5](https://github.com/entropic-bond/crud-panel/commit/5c375b59fbf0ec4d02ee92814e5a045f2a6a054b))
+
 ## [1.0.1](https://github.com/entropic-bond/crud-panel/compare/v1.0.0...v1.0.1) (2021-08-02)
 
 
