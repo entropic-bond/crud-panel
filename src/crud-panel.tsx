@@ -1,6 +1,7 @@
 import { Persistent, Unsubscriber } from 'entropic-bond'
 import React, { cloneElement, Component, ReactElement } from 'react'
 import { CrudController } from './crud-controller'
+import { snakeCase } from './utils'
 
 enum Mode { normal, add, edit }
 
@@ -152,6 +153,7 @@ export class CrudPanel<T extends Persistent> extends Component<CrudPanelProps<T>
 	render() {
 		const { mode, documents } = this.state
 		const { controller, className } = this.props
+		const docClassName = snakeCase( controller.document.className )
 		let labels = this.props.labels
 		const layout = this.props.layout || 'itemsAlways'
 
@@ -160,7 +162,7 @@ export class CrudPanel<T extends Persistent> extends Component<CrudPanelProps<T>
 		const { addNewDocumentLabel, documentsInCollectionCaption, noDocumentsFoundLabel } = labels
 
 		return (
-			<div className={`crud-panel ${ className || '' }`}>
+			<div className={`crud-panel ${ docClassName } ${ className || '' }`}>
 				{ mode === Mode.normal && layout !== 'formAlways' && layout !== 'formAndItems' &&
 
 					<button onClick={ ()=> this.newDocument() }>
