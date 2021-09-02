@@ -1,3 +1,10 @@
+## [1.1.1](https://github.com/entropic-bond/crud-panel/compare/v1.1.0...v1.1.1) (2021-09-02)
+
+
+### Bug Fixes
+
+* add button in collection items ([60897ca](https://github.com/entropic-bond/crud-panel/commit/60897cac4fd447ee2e301343c14a371f30d4a903))
+
 # [1.1.0](https://github.com/entropic-bond/crud-panel/compare/v1.0.1...v1.1.0) (2021-08-04)
 
 
