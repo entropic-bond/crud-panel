@@ -55,6 +55,10 @@ class TestController extends CrudController<Test> {
 	protected getModel(): Model<Test> {
 		return Store.getModel( 'Test' )
 	}
+	
+	allRequiredPropertiesFilled(): boolean {
+		return true
+	}
 }
 
 class TestView extends Component<Partial<CrudContentViewProps<Test>>> {

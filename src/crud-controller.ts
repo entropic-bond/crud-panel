@@ -26,10 +26,7 @@ export abstract class CrudController<T extends Persistent> {
 	}
 
 	protected abstract getModel(): Model<T> 
-	
-	allRequiredPropertiesFilled(): boolean {
-		return true
-	}
+	abstract allRequiredPropertiesFilled(): boolean
 	
 	onChange( observer: Callback<CrudControllerEvent<T>> ) {
 		return this._onChange.subscribe( observer )
