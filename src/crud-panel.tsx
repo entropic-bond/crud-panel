@@ -110,7 +110,8 @@ export class CrudPanel<T extends Persistent> extends Component<CrudPanelProps<T>
 	private async storeDocument( document: T ) {
 		const { controller, layout } = this.props
 		
-		await controller.storeDocument( document )
+		controller.setDocument( document )
+		await controller.storeDocument()
 
 		if ( layout === 'formAndItems' ) {
 			this.newDocument()
@@ -152,7 +153,7 @@ export class CrudPanel<T extends Persistent> extends Component<CrudPanelProps<T>
 		const props: CrudCardProps<T> = {
 			document,
 			onSelect: (document: T) => this.editDocument( document ),
-			onDelete: (document: T) => controller.deleteDocument( document )
+			onDelete: (document: T) => controller.setDocument( document ).deleteDocument()
 		}
 
 		if ( typeof children[1] === 'function' ) {

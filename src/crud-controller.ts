@@ -50,7 +50,7 @@ export abstract class CrudController<T extends Persistent> {
 		return this._document
 	}
 	
-	async storeDocument( document: T ) {
+	async storeDocument() {
 
 		this.notifyProgress( 'storeMainDocument', {
 			name: 'Store main document',
@@ -58,8 +58,7 @@ export abstract class CrudController<T extends Persistent> {
 			total: 1
 		})
 
-		await this.model.save( document )
-		this._document = document
+		await this.model.save( this.document )
 
 		this.notifyProgress( 'storeMainDocument', {
 			name: 'Store main document',
@@ -69,19 +68,18 @@ export abstract class CrudController<T extends Persistent> {
 		this.resetProgress()
 
 		this._onChange.notify({
-			documentChanged: this._document !== document ? document : undefined,
 			documentCollection: await this.getDocumentCollection()
 		})
 	}
 
-	async deleteDocument( document: T ) {
+	async deleteDocument() {
 		this.notifyProgress( 'deleteMainDocument', {
 			name: 'Delete main document',
 			progress: 0.2,
 			total: 1
 		})
 
-		await this.model.delete( document.id )
+		await this.model.delete( this.document.id )
 
 		this.notifyProgress( 'deleteMainDocument', {
 			name: 'Delete main document',
@@ -91,7 +89,6 @@ export abstract class CrudController<T extends Persistent> {
 		this.resetProgress()
 
 		this._onChange.notify({
-			documentChanged: document,
 			documentCollection: await this.getDocumentCollection()
 		})
 	}
