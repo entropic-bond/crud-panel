@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
-import { render, RenderResult, screen, waitFor, within } from '@testing-library/react'
+import { fireEvent, render, RenderResult, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { JsonDataSource, Model, persistent, Persistent, registerPersistentClass, Store } from 'entropic-bond'
+import { EntropicComponent, JsonDataSource, Model, persistent, Persistent, registerPersistentClass, Store } from 'entropic-bond'
 import { CrudContentViewProps, CrudPanel, CrudPanelLabels, CrudCardProps, Layout } from './crud-panel'
 import { CrudController } from './crud-controller'
 
@@ -35,7 +35,7 @@ const mockData = {
 }
 
 @registerPersistentClass( 'Test' )
-class Test extends Persistent {
+class Test extends EntropicComponent {
 	set testProp( value: string ) {
 		this._testProp = value
 	}
@@ -55,13 +55,19 @@ class TestController extends CrudController<Test> {
 	protected getModel(): Model<Test> {
 		return Store.getModel( 'Test' )
 	}
-	
+
 	allRequiredPropertiesFilled(): boolean {
 		return true
 	}
 }
 
 class TestView extends Component<Partial<CrudContentViewProps<Test>>> {
+	componentDidMount(): void {
+		const { controller } = this.props
+		
+		controller.document.onChange(() => this.setState({}))
+	}
+
 	render() {
 		const { controller, onCancel, onSubmit, submitButtonCaption } = this.props
 
@@ -70,7 +76,7 @@ class TestView extends Component<Partial<CrudContentViewProps<Test>>> {
 				<h1>{ viewHeader }</h1>
 				<input 
 					placeholder={ testViewPlaceholder }
-					value={ controller.document.testProp } 
+					value={ controller.document.testProp || '' } 
 					onChange={ e => controller.document.testProp = e.target.value } 
 				/>
 				<button onClick={ ()=>onSubmit( controller.document ) }>{ submitButtonCaption }</button>
@@ -165,8 +171,9 @@ describe( 'Crud Panel', ()=>{
 		it( 'should refresh document list on new document added', async ()=>{
 			userEvent.click( screen.getByRole( 'button', { name: crudLabels.addNewDocumentLabel} ))
 
-			const input = await screen.findByPlaceholderText( testViewPlaceholder )
-			userEvent.type( input, 'New and fancy Application' )
+			const input = await screen.findByPlaceholderText( testViewPlaceholder ) as HTMLInputElement
+			fireEvent.change( input, { target: { value: 'New and fancy Application' }})
+			// userEvent.type( input, 'New and fancy Application') // does not work!!
 
 			userEvent.click( screen.getByRole( 'button', { name: crudLabels.addButtonLabel } ) )
 			const docs = screen.getByRole( 
