@@ -13,7 +13,7 @@ export interface CrudCardProps<T extends Persistent> {
 type ProgressBarElement = ( progress: number ) => JSX.Element
 
 export interface CrudContentViewProps<T extends Persistent> {
-	controller: CrudController<T>
+	document: T
 	submitButtonCaption: string
 	onSubmit: ( document: T ) => void
 	onCancel: ()=>void
@@ -33,6 +33,7 @@ interface CrudPanelState<T extends Persistent> {
 	documents: T[]
 	mode: Mode
 	progress: number
+	document: T
 }
 
 interface CrudPanelProps<T extends Persistent> {
@@ -58,7 +59,8 @@ export class CrudPanel<T extends Persistent> extends Component<CrudPanelProps<T>
 		this.state = {
 			documents: [],
 			mode: Mode.normal,
-			progress: 0
+			progress: 0,
+			document: props.controller.createDocument()
 		}
 	}
 
@@ -91,17 +93,15 @@ export class CrudPanel<T extends Persistent> extends Component<CrudPanelProps<T>
 	private newDocument() {
 		const { controller } = this.props
 		
-		controller.createDocument()
 		this.setState({
-			mode: Mode.add
+			mode: Mode.add,
+			document: controller.createDocument()
 		})
 	}
 
 	private editDocument( document: T ) {
-		const { controller } = this.props
-		
-		controller.setDocument( document )
 		this.setState({
+			document,
 			mode: Mode.edit
 		})
 	}
@@ -109,8 +109,7 @@ export class CrudPanel<T extends Persistent> extends Component<CrudPanelProps<T>
 	private async storeDocument( document: T ) {
 		const { controller, layout } = this.props
 		
-		controller.setDocument( document )
-		await controller.storeDocument()
+		await controller.storeDocument( document )
 
 		if ( layout === 'formAndItems' ) {
 			this.newDocument()
@@ -124,13 +123,14 @@ export class CrudPanel<T extends Persistent> extends Component<CrudPanelProps<T>
 	}
 
 	private invokeContentViewChild( labels : CrudPanelLabels ) {
-		const { children, controller, layout } = this.props
-		const { mode } = this.state
+		const { children, layout } = this.props
+		const { mode, document } = this.state
 		const { addButtonLabel, updateButtonLabel } = labels
 		const closeOnCancel = layout !== 'formAndItems'
+		if ( !document ) return
 
 		const props: CrudContentViewProps<T> = {
-			controller,
+			document,
 			submitButtonCaption: mode==Mode.edit? updateButtonLabel : addButtonLabel,
 			onSubmit: ( document: T ) => this.storeDocument( document ),
 			onCancel: closeOnCancel
@@ -139,10 +139,10 @@ export class CrudPanel<T extends Persistent> extends Component<CrudPanelProps<T>
 		}
 
 		if ( typeof children[0] === 'function' ) {
-			return cloneElement( children[0] (props), { key: controller.document.id })
+			return cloneElement( children[0] (props), { key: document.id })
 		}
 		else {
-			return cloneElement( children[0], { key: controller.document.id, ...props })	
+			return cloneElement( children[0], { key: document.id, ...props })	
 		}		
 	}
 
@@ -152,7 +152,7 @@ export class CrudPanel<T extends Persistent> extends Component<CrudPanelProps<T>
 		const props: CrudCardProps<T> = {
 			document,
 			onSelect: (document: T) => this.editDocument( document ),
-			onDelete: (document: T) => controller.setDocument( document ).deleteDocument()
+			onDelete: (document: T) => controller.deleteDocument( document )
 		}
 
 		if ( typeof children[1] === 'function' ) {
@@ -164,9 +164,9 @@ export class CrudPanel<T extends Persistent> extends Component<CrudPanelProps<T>
 	}
 
 	render() {
-		const { mode, documents, progress } = this.state
+		const { mode, documents, progress, document } = this.state
 		const { controller, className, cardAddButton, progressBar } = this.props
-		const docClassName = snakeCase( controller.document.className )
+		const docClassName = snakeCase( document?.className )
 		let labels = this.props.labels
 		const layout = this.props.layout || 'itemsAlways'
 

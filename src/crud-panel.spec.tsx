@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { fireEvent, render, RenderResult, screen, waitFor, within } from '@testing-library/react'
+import { render, RenderResult, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { EntropicComponent, JsonDataSource, Model, persistent, Persistent, registerPersistentClass, Store } from 'entropic-bond'
 import { CrudContentViewProps, CrudPanel, CrudPanelLabels, CrudCardProps, Layout } from './crud-panel'
@@ -37,7 +37,7 @@ const mockData = {
 @registerPersistentClass( 'Test' )
 class Test extends EntropicComponent {
 	set testProp( value: string ) {
-		this._testProp = value
+		this.changeProp('testProp', value )
 	}
 	
 	get testProp(): string {
@@ -48,8 +48,9 @@ class Test extends EntropicComponent {
 }
 
 class TestController extends CrudController<Test> {
-	constructor() {
-		super( new Test() )
+
+	createDocument(): Test {
+		return new Test()
 	}
 
 	protected getModel(): Model<Test> {
@@ -63,23 +64,23 @@ class TestController extends CrudController<Test> {
 
 class TestView extends Component<Partial<CrudContentViewProps<Test>>> {
 	componentDidMount(): void {
-		const { controller } = this.props
+		const { document } = this.props
 		
-		controller.document.onChange(() => this.setState({}))
+		document.onChange(() => this.setState({}))
 	}
 
 	render() {
-		const { controller, onCancel, onSubmit, submitButtonCaption } = this.props
+		const { document, onCancel, onSubmit, submitButtonCaption } = this.props
 
 		return (
 			<div>
 				<h1>{ viewHeader }</h1>
 				<input 
 					placeholder={ testViewPlaceholder }
-					value={ controller.document.testProp || '' } 
-					onChange={ e => controller.document.testProp = e.target.value } 
+					value={ document.testProp || '' } 
+					onChange={ e => document.testProp = e.target.value } 
 				/>
-				<button onClick={ ()=>onSubmit( controller.document ) }>{ submitButtonCaption }</button>
+				<button onClick={ ()=>onSubmit( document ) }>{ submitButtonCaption }</button>
 				<button onClick={ onCancel }>{ cancelButtonCaption }</button>
 			</div>
 		)
@@ -119,6 +120,12 @@ describe( 'Crud Panel', ()=>{
 		)
 	})
 
+	it( 'should show add button', ()=>{
+		expect(
+			screen.getByRole( 'button', { name: crudLabels.addNewDocumentLabel })
+		).toBeInTheDocument()
+	})
+	
 	it( 'should show existing documents', ()=>{
 		const docs = screen.getByRole( 
 			'heading', { name: crudLabels.documentsInCollectionCaption }
@@ -133,19 +140,33 @@ describe( 'Crud Panel', ()=>{
 	describe( 'Accepts children as functions', ()=>{
 		beforeEach(() => {
 			renderResult.rerender(
-				<CrudPanel controller={ controller } labels={ crudLabels } layout={'formAndItems'}>
+				<CrudPanel controller={ controller } labels={ crudLabels }>
 					{ props => <TestView {...props}/> }
 					{ props => <TestCard {...props}/> }
 				</CrudPanel>
 			)
 		})
 
-		it( 'should show panels', ()=>{
-			expect( screen.getByPlaceholderText( testViewPlaceholder ) ).toBeInTheDocument()
+		it( 'should show add button', ()=>{
+			expect(
+				screen.getByRole( 'button', { name: crudLabels.addNewDocumentLabel })
+			).toBeInTheDocument()
+		})
+		
+		it( 'should show existing documents', ()=>{
+			const docs = screen.getByRole( 
+				'heading', { name: crudLabels.documentsInCollectionCaption }
+			).nextElementSibling as HTMLElement
+	
+	
+			expect( within( docs ).getByText( 'Test prop 1' )	).toBeInTheDocument()
+			expect( within( docs ).getByText( 'Test prop 2' )	).toBeInTheDocument()
+			expect( docs.children.length ).toBe( 2 )
+
 			expect( screen.getAllByRole( 'button', { name: editButtonLabel })[0] ).toBeInTheDocument()
 			expect( screen.getAllByRole( 'button', { name: deleteButtonLabel })[0] ).toBeInTheDocument()
 		})
-	
+		
 	})
 
 	describe( 'Working with TestView', ()=> {
@@ -172,8 +193,8 @@ describe( 'Crud Panel', ()=>{
 			userEvent.click( screen.getByRole( 'button', { name: crudLabels.addNewDocumentLabel} ))
 
 			const input = await screen.findByPlaceholderText( testViewPlaceholder ) as HTMLInputElement
-			fireEvent.change( input, { target: { value: 'New and fancy Application' }})
-			// userEvent.type( input, 'New and fancy Application') // does not work!!
+			// fireEvent.change( input, { target: { value: 'New and fancy Application' }})
+			userEvent.type( input, 'New and fancy Application') // does not work!!
 
 			userEvent.click( screen.getByRole( 'button', { name: crudLabels.addButtonLabel } ) )
 			const docs = screen.getByRole( 
@@ -282,15 +303,15 @@ describe( 'Crud Panel', ()=>{
 	it( 'should allow to pass labels as a function', async ()=>{
 		const labels = ( controller: CrudController<Test> ) => Object.entries( crudLabels )
 		.reduce( ( prev, [ key, label ] ) => {
-			prev[ key ] = `${ label } ${ controller.document.className }`
+			prev[ key ] = `${ label } ${ controller.createDocument().className }`
 			return prev
 		},{}) as CrudPanelLabels
-
+		
 		renderResult.rerender(
 			<CrudPanel controller={ controller } labels={ labels }>
 				<TestView />
 				{ ( props: CrudCardProps<Test> ) => (
-						<div>
+					<div>
 							<p>{ props.document.testProp }</p>
 							<button onClick={ ()=>props.onSelect( props.document ) }>
 								{ editButtonLabel }
@@ -302,12 +323,14 @@ describe( 'Crud Panel', ()=>{
 				)}
 			</CrudPanel>
 		)
+		
+		const documentClassName = controller.createDocument().className
 
 		expect( 
-			screen.getByText( `${ crudLabels.addNewDocumentLabel } ${ controller.document.className }` ) 
+			screen.getByText( `${ crudLabels.addNewDocumentLabel } ${ documentClassName }` ) 
 		).toBeInTheDocument()
 		expect( 
-			screen.getByText( `${ crudLabels.documentsInCollectionCaption } ${ controller.document.className }` ) 
+			screen.getByText( `${ crudLabels.documentsInCollectionCaption } ${ documentClassName }` ) 
 		).toBeInTheDocument()
 	})
 	
