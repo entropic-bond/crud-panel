@@ -105,9 +105,11 @@ describe( 'Crud Panel', ()=>{
 	let controller: TestController
 	let notifySpy: jest.Mock<any, any>
 	let renderResult: RenderResult
+	let datasource: JsonDataSource
 
 	beforeEach( async ()=>{
-		Store.useDataSource( new JsonDataSource({ ...mockData }) )
+		datasource = new JsonDataSource({ ...mockData }).simulateDelay( 10 )
+		Store.useDataSource( datasource )
 		controller = new TestController()
 		notifySpy = jest.fn()
 		controller.onChange( notifySpy )
@@ -118,6 +120,7 @@ describe( 'Crud Panel', ()=>{
 				<TestCard />
 			</CrudPanel>
 		)
+		await datasource.wait()
 	})
 
 	it( 'should show add button', ()=>{

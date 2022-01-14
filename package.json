@@ -68,6 +68,6 @@
     }
   },
   "dependencies": {
-    "entropic-bond": "^1.17.2"
+    "entropic-bond": "^1.19.0"
   }
 }
