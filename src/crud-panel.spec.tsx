@@ -108,14 +108,17 @@ describe( 'Crud Panel', ()=>{
 	let datasource: JsonDataSource
 
 	beforeEach( async ()=>{
-		datasource = new JsonDataSource({ ...mockData }).simulateDelay( 10 )
+		datasource = new JsonDataSource({ ...mockData })
 		Store.useDataSource( datasource )
 		controller = new TestController()
 		notifySpy = jest.fn()
 		controller.onChange( notifySpy )
 
 		renderResult = render(
-			<CrudPanel controller={ controller } labels={ crudLabels }>
+			<CrudPanel 
+				controller={ controller } 
+				labels={ crudLabels }
+			>
 				<TestView />
 				<TestCard />
 			</CrudPanel>
@@ -303,38 +306,39 @@ describe( 'Crud Panel', ()=>{
 
 	})
 
-	it( 'should allow to pass labels as a function', async ()=>{
-		const labels = ( controller: CrudController<Test> ) => Object.entries( crudLabels )
-		.reduce( ( prev, [ key, label ] ) => {
-			prev[ key ] = `${ label } ${ controller.createDocument().className }`
-			return prev
-		},{}) as CrudPanelLabels
-		
-		renderResult.rerender(
-			<CrudPanel controller={ controller } labels={ labels }>
-				<TestView />
-				{ ( props: CrudCardProps<Test> ) => (
-					<div>
-							<p>{ props.document.testProp }</p>
-							<button onClick={ ()=>props.onSelect( props.document ) }>
-								{ editButtonLabel }
-							</button>
-							<button onClick={ ()=>props.onDelete( props.document ) }>
-								{ deleteButtonLabel }
-							</button>
-						</div>  
-				)}
-			</CrudPanel>
-		)
-		
-		const documentClassName = controller.createDocument().className
+	describe( 'Labels', ()=>{
+		it( 'should allow to pass labels as a function', async ()=>{
+			const labels = ( controller: CrudController<Test> ) => Object.entries( crudLabels )
+			.reduce( ( prev, [ key, label ] ) => {
+				prev[ key ] = `${ label } ${ controller.createDocument().className }`
+				return prev
+			},{}) as CrudPanelLabels
+			
+			renderResult.rerender(
+				<CrudPanel controller={ controller } labels={ labels }>
+					<TestView />
+					{ ( props: CrudCardProps<Test> ) => (
+						<div>
+								<p>{ props.document.testProp }</p>
+								<button onClick={ ()=>props.onSelect( props.document ) }>
+									{ editButtonLabel }
+								</button>
+								<button onClick={ ()=>props.onDelete( props.document ) }>
+									{ deleteButtonLabel }
+								</button>
+							</div>  
+					)}
+				</CrudPanel>
+			)
+			
+			const documentClassName = controller.createDocument().className
 
-		expect( 
-			screen.getByText( `${ crudLabels.addNewDocumentLabel } ${ documentClassName }` ) 
-		).toBeInTheDocument()
-		expect( 
-			screen.getByText( `${ crudLabels.documentsInCollectionCaption } ${ documentClassName }` ) 
-		).toBeInTheDocument()
+			expect( 
+				screen.getByText( `${ crudLabels.addNewDocumentLabel } ${ documentClassName }` ) 
+			).toBeInTheDocument()
+			expect( 
+				screen.getByText( `${ crudLabels.documentsInCollectionCaption } ${ documentClassName }` ) 
+			).toBeInTheDocument()
+		})
 	})
-	
 })
