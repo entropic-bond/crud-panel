@@ -1,7 +1,6 @@
-import { Persistent, Unsubscriber } from 'entropic-bond'
+import { Persistent, snakeCase, Unsubscriber } from 'entropic-bond'
 import React, { cloneElement, Component, ReactElement } from 'react'
 import { CrudController } from './crud-controller'
-import { snakeCase } from './utils'
 
 enum Mode { normal, add, edit }
 
