@@ -1,17 +1,5 @@
 import { Callback, Persistent, Model, Observable } from 'entropic-bond'
-
-interface ProgressStage {
-	name: string
-	progress: number
-	total: number
-}
-
-export interface ProgressEvent {
-	stages: {
-		[stageId: string]: ProgressStage
-	}
-	overallProgress: number
-}
+import { ProgressController, ProgressEvent } from './progress-controller'
 
 export interface CrudControllerEvent<T extends Persistent> {
 	documentChanged?: T
@@ -19,10 +7,6 @@ export interface CrudControllerEvent<T extends Persistent> {
 }
 
 export abstract class CrudController<T extends Persistent> {
-	constructor() {
-		this._onChange = new Observable<CrudControllerEvent<T>>()
-		this._onProgress = new Observable<ProgressEvent>()
-	}
 
 	abstract allRequiredPropertiesFilled(): boolean
 	abstract createDocument(): T 
@@ -33,79 +17,59 @@ export abstract class CrudController<T extends Persistent> {
 	}
 
 	async storeDocument( document: T ) {
+		const progressStage = 'Saving main document'
 
-		this.notifyProgress( 'storeMainDocument', {
-			name: 'Store main document',
-			progress: 0.2,
-			total: 1
-		})
+		try {
+			this._progressController.notifyBusy( true, progressStage )
+			await this.model.save( document )
 
-		await this.model.save( document )
-
-		this.notifyProgress( 'storeMainDocument', {
-			name: 'Store main document',
-			progress: 1,
-			total: 1
-		})
-		this.resetProgress()
-
-		this._onChange.notify({
-			documentCollection: await this.getDocumentCollection()
-		})
+			this._onChange.notify({
+				documentCollection: await this.getDocumentCollection()
+			})
+		}
+		finally {
+			this._progressController.notifyBusy( false, progressStage )
+		}
 	}
 
 	async deleteDocument( document: T ) {
-		this.notifyProgress( 'deleteMainDocument', {
-			name: 'Delete main document',
-			progress: 0.2,
-			total: 1
-		})
+		const progressStage = 'Delete main document'
+		try {
+			this._progressController.notifyBusy( true, progressStage )
+			await this.model.delete( document.id )
 
-		await this.model.delete( document.id )
-
-		this.notifyProgress( 'deleteMainDocument', {
-			name: 'Delete main document',
-			progress: 1,
-			total: 1
-		})
-		this.resetProgress()
-
-		this._onChange.notify({
-			documentCollection: await this.getDocumentCollection()
-		})
+			this._onChange.notify({
+				documentCollection: await this.getDocumentCollection()
+			})
+		}
+		finally {
+			this._progressController.notifyBusy( false, progressStage )
+		}
 	}
 		
-	getDocumentCollection() {
-		return this.model.find().get()
+	async getDocumentCollection() {
+		const progressStage = 'Retrieving document collection'
+
+		try {
+			this._progressController.notifyBusy( true, progressStage )
+			var collection = await this.model.find().get()
+		}
+		finally {
+			this._progressController.notifyBusy( false, progressStage )
+		}
+
+		return collection
 	}
 
 	onProgress( observer: Callback<ProgressEvent> ) {
-		return this._onProgress.subscribe( observer )
+		return this._progressController.onProgress( observer )
 	}
 
-	protected notifyProgress( stageId: string, progress: ProgressStage ) {
-		this._progressStage[ stageId ] = progress
-
-		let overallProgress = Object.values( this._progressStage ).reduce( (prev, stage, _i, arr )=>{
-			return prev + stage.progress / stage.total / arr.length
-		}, 0)
-		
-		this._onProgress.notify({
-			stages: { ...this._progressStage },
-			overallProgress
-		})
-	}
-
-	protected resetProgress() {
-		this._progressStage = {}
-	}
-	
 	protected get model() {
 		return this._model || ( this._model = this.getModel() )
 	}
 		
-	private _onChange: Observable<CrudControllerEvent<T>>
+	private _onChange: Observable<CrudControllerEvent<T>> = new Observable<CrudControllerEvent<T>>()
 	private _model: Model<T>
-	private _progressStage: { [stageId: string]: ProgressStage } = {}
-	private _onProgress: Observable<ProgressEvent>
+	private _progressController: ProgressController = new ProgressController()
 }

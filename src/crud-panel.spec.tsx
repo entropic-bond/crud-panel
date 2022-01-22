@@ -1,9 +1,10 @@
 import React, { Component } from 'react'
 import { render, RenderResult, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { EntropicComponent, JsonDataSource, Model, persistent, Persistent, registerPersistentClass, Store } from 'entropic-bond'
+import { JsonDataSource, Store } from 'entropic-bond'
 import { CrudContentViewProps, CrudPanel, CrudPanelLabels, CrudCardProps, Layout } from './crud-panel'
 import { CrudController } from './crud-controller'
+import { Test, TestController } from './crud-controller.spec'
 
 const crudLabels: CrudPanelLabels = {
 	addNewDocumentLabel: 'Add new document',
@@ -31,34 +32,6 @@ const mockData = {
 			id: 'test2',
 			testProp: 'Test prop 2'
 		}
-	}
-}
-
-@registerPersistentClass( 'Test' )
-class Test extends EntropicComponent {
-	set testProp( value: string ) {
-		this.changeProp('testProp', value )
-	}
-	
-	get testProp(): string {
-		return this._testProp
-	}
-	
-	@persistent private _testProp: string
-}
-
-class TestController extends CrudController<Test> {
-
-	createDocument(): Test {
-		return new Test()
-	}
-
-	protected getModel(): Model<Test> {
-		return Store.getModel( 'Test' )
-	}
-
-	allRequiredPropertiesFilled(): boolean {
-		return true
 	}
 }
 
@@ -199,8 +172,7 @@ describe( 'Crud Panel', ()=>{
 			userEvent.click( screen.getByRole( 'button', { name: crudLabels.addNewDocumentLabel} ))
 
 			const input = await screen.findByPlaceholderText( testViewPlaceholder ) as HTMLInputElement
-			// fireEvent.change( input, { target: { value: 'New and fancy Application' }})
-			userEvent.type( input, 'New and fancy Application') // does not work!!
+			userEvent.type( input, 'New and fancy Application') 
 
 			userEvent.click( screen.getByRole( 'button', { name: crudLabels.addButtonLabel } ) )
 			const docs = screen.getByRole( 
