@@ -60,14 +60,22 @@ describe( 'Crud Controller', ()=>{
 	describe( 'Long operations', ()=>{
 		
 		beforeEach(()=>{
-			datasource.simulateDelay( 500 )
+			datasource.simulateDelay( 50 )
 		})
 
 		it( 'should notify busy on delete', async ()=>{
-			controller.deleteDocument( new Test() )
+			const promise = controller.deleteDocument( new Test() )
 			expect( onProgress ).toHaveBeenLastCalledWith( expect.objectContaining({ busy: true }) )
-			await datasource.wait()
+			await promise
 			expect( onProgress ).toHaveBeenLastCalledWith( expect.objectContaining({ busy: false }) )
 		})
+
+		it( 'should notify busy on store', async ()=>{
+			const promise = controller.storeDocument( new Test() )
+			expect( onProgress ).toHaveBeenLastCalledWith( expect.objectContaining({ busy: true }) )
+			await promise
+			expect( onProgress ).toHaveBeenLastCalledWith( expect.objectContaining({ busy: false }) )
+		})
+		
 	})
 })
