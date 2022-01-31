@@ -64,14 +64,14 @@ describe( 'Crud Controller', ()=>{
 		})
 
 		it( 'should notify busy on delete', async ()=>{
-			const promise = controller.deleteDocument( new Test() )
+			const promise = controller.deleteDocument()
 			expect( onProgress ).toHaveBeenLastCalledWith( expect.objectContaining({ busy: true }) )
 			await promise
 			expect( onProgress ).toHaveBeenLastCalledWith( expect.objectContaining({ busy: false }) )
 		})
 
 		it( 'should notify busy on store', async ()=>{
-			const promise = controller.storeDocument( new Test() )
+			const promise = controller.storeDocument()
 			expect( onProgress ).toHaveBeenLastCalledWith( expect.objectContaining({ busy: true }) )
 			await promise
 			expect( onProgress ).toHaveBeenLastCalledWith( expect.objectContaining({ busy: false }) )

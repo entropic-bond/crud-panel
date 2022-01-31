@@ -282,7 +282,7 @@ describe( 'Crud Panel', ()=>{
 		it( 'should allow to pass labels as a function', async ()=>{
 			const labels = ( controller: CrudController<Test> ) => Object.entries( crudLabels )
 			.reduce( ( prev, [ key, label ] ) => {
-				prev[ key ] = `${ label } ${ controller.createDocument().className }`
+				prev[ key ] = `${ label } ${ controller.document.className }`
 				return prev
 			},{}) as CrudPanelLabels
 			
