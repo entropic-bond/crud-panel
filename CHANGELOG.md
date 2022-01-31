@@ -1,3 +1,10 @@
+# [2.1.0](https://github.com/entropic-bond/crud-panel/compare/v2.0.0...v2.1.0) (2022-01-31)
+
+
+### Features
+
+* controller always contains document ([5656998](https://github.com/entropic-bond/crud-panel/commit/565699863d84ac94315ac8ca36c8761d915aed2f))
+
 # [2.0.0](https://github.com/entropic-bond/crud-panel/compare/v1.1.1...v2.0.0) (2022-01-14)
 
 
