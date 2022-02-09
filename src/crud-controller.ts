@@ -28,7 +28,7 @@ export abstract class CrudController<T extends Persistent> {
 	}
 	
 	onChange( observer: Callback<CrudControllerEvent<T>> ) {
-		return this._onChange.subscribe( observer )
+		return this.onChangeHdl.subscribe( observer )
 	}
 
 	newDocument() {
@@ -42,7 +42,7 @@ export abstract class CrudController<T extends Persistent> {
 			this.progressController.notifyBusy( true, progressStage )
 			await this.storeDoc()
 
-			this._onChange.notify({
+			this.onChangeHdl.notify({
 				documentCollection: await this.documentCollection()
 			})
 		}
@@ -57,7 +57,7 @@ export abstract class CrudController<T extends Persistent> {
 			this.progressController.notifyBusy( true, progressStage )
 			await this.deleteDoc()
 
-			this._onChange.notify({
+			this.onChangeHdl.notify({
 				documentCollection: await this.documentCollection()
 			})
 		}
@@ -91,7 +91,7 @@ export abstract class CrudController<T extends Persistent> {
 	setDocument( value: T ): CrudController<T> {
 		if ( this._document !== value ) {
 			this._document = value
-			this._onChange.notify({ documentChanged: this._document })
+			this.onChangeHdl.notify({ documentChanged: this._document })
 		}
 
 		return this
@@ -106,7 +106,7 @@ export abstract class CrudController<T extends Persistent> {
 	}
 
 	protected progressController: ProgressController = new ProgressController()
-	private _onChange: Observable<CrudControllerEvent<T>> = new Observable<CrudControllerEvent<T>>()
+	protected onChangeHdl: Observable<CrudControllerEvent<T>> = new Observable<CrudControllerEvent<T>>()
 	private _model: Model<T>
 	private _document: T
 }
