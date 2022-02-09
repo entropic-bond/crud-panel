@@ -1,3 +1,10 @@
+# [2.2.0](https://github.com/entropic-bond/crud-panel/compare/v2.1.0...v2.2.0) (2022-02-09)
+
+
+### Features
+
+* onChange handler is protected ([d3e506d](https://github.com/entropic-bond/crud-panel/commit/d3e506d16a5142e018ab6ac89956257669c57892))
+
 # [2.1.0](https://github.com/entropic-bond/crud-panel/compare/v2.0.0...v2.1.0) (2022-01-31)
 
 
