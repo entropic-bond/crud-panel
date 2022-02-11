@@ -1,3 +1,10 @@
+## [2.2.1](https://github.com/entropic-bond/crud-panel/compare/v2.2.0...v2.2.1) (2022-02-11)
+
+
+### Bug Fixes
+
+* findDocs can return readonly ([0654bb2](https://github.com/entropic-bond/crud-panel/commit/0654bb2f44cc40cf4ad3b7c867b14d0e6d90987b))
+
 # [2.2.0](https://github.com/entropic-bond/crud-panel/compare/v2.1.0...v2.2.0) (2022-02-09)
 
 
