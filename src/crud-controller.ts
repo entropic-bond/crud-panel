@@ -3,7 +3,7 @@ import { ProgressController, ProgressEvent } from './progress-controller'
 
 export interface CrudControllerEvent<T extends Persistent> {
 	documentChanged?: T
-	documentCollection?: T[]
+	documentCollection?: T[] | readonly T[]
 }
 
 export abstract class CrudController<T extends Persistent> {
@@ -23,7 +23,7 @@ export abstract class CrudController<T extends Persistent> {
 		return this.model.delete( this.document.id )
 	}
 
-	protected findDocs( limit: number ): Promise<T[]> {
+	protected findDocs( limit: number ): Promise<T[] | readonly T[]> {
 		return this.model.find().limit( limit ).get()
 	}
 	
@@ -66,7 +66,7 @@ export abstract class CrudController<T extends Persistent> {
 		}
 	}
 		
-	async documentCollection( limit?: number ): Promise<T[]> {
+	async documentCollection( limit?: number ): Promise<T[] | readonly T[]> {
 		const progressStage = 'Retrieving document collection'
 
 		try {

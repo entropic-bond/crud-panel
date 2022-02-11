@@ -28,9 +28,8 @@ export interface CrudPanelLabels {
 export type Layout = 'formOrItems' | 'itemsAlways' | 'formAndItems'
 
 interface CrudPanelState<T extends Persistent> {
-	documents: T[]
+	documents: T[] | readonly T[]
 	mode: Mode
-	// document: T
 }
 
 interface CrudPanelProps<T extends Persistent> {
@@ -55,7 +54,6 @@ export class CrudPanel<T extends Persistent> extends Component<CrudPanelProps<T>
 		this.state = {
 			documents: [],
 			mode: Mode.normal,
-			// document: props.controller.newDocument()
 		}
 	}
 
@@ -85,7 +83,6 @@ export class CrudPanel<T extends Persistent> extends Component<CrudPanelProps<T>
 
 		this.setState({
 			mode: Mode.add,
-			// document: controller.newDocument()
 		})
 	}
 
@@ -93,7 +90,6 @@ export class CrudPanel<T extends Persistent> extends Component<CrudPanelProps<T>
 		this.props.controller.setDocument( document )
 
 		this.setState({
-			// document,
 			mode: Mode.edit
 		})
 	}
