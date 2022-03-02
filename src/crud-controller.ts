@@ -1,14 +1,15 @@
-import { Callback, Persistent, Model, Observable } from 'entropic-bond'
+import { Callback, EntropicComponent, Model, Observable, PropChangeEvent, Unsubscriber } from 'entropic-bond'
 import { ProgressController, ProgressEvent } from './progress-controller'
 
-export interface CrudControllerEvent<T extends Persistent> {
+export interface CrudControllerEvent<T extends EntropicComponent> {
+	documentProps?: PropChangeEvent<T> 
 	documentChanged?: T
 	documentCollection?: T[] | readonly T[]
 }
 
-export abstract class CrudController<T extends Persistent> {
+export abstract class CrudController<T extends EntropicComponent> {
 	constructor( document?: T ) {
-		this._document = document || this.createDocument()
+		this.setDocument( document || this.createDocument() )
 	}
 
 	abstract allRequiredPropertiesFilled(): boolean
@@ -90,6 +91,8 @@ export abstract class CrudController<T extends Persistent> {
 
 	setDocument( value: T ): CrudController<T> {
 		if ( this._document !== value ) {
+			if ( this.unsubscribeDocument ) this.unsubscribeDocument()
+			this.unsubscribeDocument = value.onChange( e => this.onChangeHdl.notify({ documentProps: e } ) )
 			this._document = value
 			this.onChangeHdl.notify({ documentChanged: this._document })
 		}
@@ -109,4 +112,5 @@ export abstract class CrudController<T extends Persistent> {
 	protected onChangeHdl: Observable<CrudControllerEvent<T>> = new Observable<CrudControllerEvent<T>>()
 	private _model: Model<T>
 	private _document: T
+	private unsubscribeDocument: Unsubscriber
 }

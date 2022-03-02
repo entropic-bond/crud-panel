@@ -37,13 +37,17 @@ const mockData = {
 
 class TestView extends Component<Partial<CrudContentViewProps<Test>>> {
 	componentDidMount(): void {
-		const { document } = this.props
+		const { controller } = this.props
 		
-		document.onChange(() => this.setState({}))
+		controller.onChange( e => {
+			if ( e.documentProps ) this.setState( e.documentProps )
+		})
 	}
 
 	render() {
-		const { document, onCancel, onSubmit, submitButtonCaption } = this.props
+		const { controller, onCancel, onSubmit, submitButtonCaption } = this.props
+		const { document } = controller
+
 
 		return (
 			<div>

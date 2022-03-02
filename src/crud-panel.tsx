@@ -1,17 +1,17 @@
-import { Persistent, snakeCase, Unsubscriber } from 'entropic-bond'
+import { EntropicComponent, snakeCase, Unsubscriber } from 'entropic-bond'
 import React, { cloneElement, Component, ReactElement } from 'react'
 import { CrudController } from './crud-controller'
 
 enum Mode { normal, add, edit }
 
-export interface CrudCardProps<T extends Persistent> {
+export interface CrudCardProps<T extends EntropicComponent> {
 	document: T
 	onSelect?: ( document: T ) => void
 	onDelete?: ( document: T ) => void
 }
 
-export interface CrudContentViewProps<T extends Persistent> {
-	document: T
+export interface CrudContentViewProps<T extends EntropicComponent> {
+	controller: CrudController<T>
 	submitButtonCaption: string
 	onSubmit: ( document: T ) => void
 	onCancel: ()=>void
@@ -27,12 +27,12 @@ export interface CrudPanelLabels {
 
 export type Layout = 'formOrItems' | 'itemsAlways' | 'formAndItems'
 
-interface CrudPanelState<T extends Persistent> {
+interface CrudPanelState<T extends EntropicComponent> {
 	documents: T[] | readonly T[]
 	mode: Mode
 }
 
-interface CrudPanelProps<T extends Persistent> {
+interface CrudPanelProps<T extends EntropicComponent> {
 	controller: CrudController<T>	
 	labels: CrudPanelLabels | ( ( controller: CrudController<T> ) => CrudPanelLabels )
 	layout?: Layout
@@ -46,7 +46,7 @@ interface CrudPanelProps<T extends Persistent> {
 	footer?: string | JSX.Element
 }
 
-export class CrudPanel<T extends Persistent> extends Component<CrudPanelProps<T>, CrudPanelState<T>> {
+export class CrudPanel<T extends EntropicComponent> extends Component<CrudPanelProps<T>, CrudPanelState<T>> {
 
 	constructor( props: CrudPanelProps<T> ) {
 		super( props )
@@ -96,7 +96,7 @@ export class CrudPanel<T extends Persistent> extends Component<CrudPanelProps<T>
 
 	private async storeDocument( document: T ) {
 		const { controller, layout } = this.props
-		const controller1 = controller.setDocument( document )
+		controller.setDocument( document )
 		await controller.storeDocument()
 
 		if ( layout === 'formAndItems' ) {
@@ -114,10 +114,10 @@ export class CrudPanel<T extends Persistent> extends Component<CrudPanelProps<T>
 		const { mode } = this.state
 		const { addButtonLabel, updateButtonLabel } = labels
 		const closeOnCancel = layout !== 'formAndItems'
-		if ( !document ) return
+		if ( !controller.document ) return
 
 		const props: CrudContentViewProps<T> = {
-			document: controller.document,
+			controller: controller,
 			submitButtonCaption: mode==Mode.edit? updateButtonLabel : addButtonLabel,
 			onSubmit: ( document: T ) => this.storeDocument( document ),
 			onCancel: closeOnCancel
