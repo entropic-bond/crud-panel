@@ -1,3 +1,13 @@
+# [3.0.0](https://github.com/entropic-bond/crud-panel/compare/v2.2.1...v3.0.0) (2022-03-03)
+
+
+* npm update ([6eadccf](https://github.com/entropic-bond/crud-panel/commit/6eadccf8de7d27beca796768e31bb4ca5839c7ff))
+
+
+### BREAKING CHANGES
+
+* View accepts controller instead of document
+
 ## [2.2.1](https://github.com/entropic-bond/crud-panel/compare/v2.2.0...v2.2.1) (2022-02-11)
 
 
