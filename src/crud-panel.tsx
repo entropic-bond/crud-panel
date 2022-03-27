@@ -21,6 +21,7 @@ export interface CrudPanelLabels {
 	addNewDocumentLabel: string
 	addButtonLabel: string
 	updateButtonLabel: string
+	singularDocumentInCollectionCaption?: string
 	documentsInCollectionCaption: string
 	noDocumentsFoundLabel: string
 }
@@ -159,7 +160,7 @@ export class CrudPanel<T extends EntropicComponent> extends Component<CrudPanelP
 
 		if ( typeof labels === 'function' ) labels = labels( controller )
 
-		const { addNewDocumentLabel, documentsInCollectionCaption, noDocumentsFoundLabel } = labels
+		const { addNewDocumentLabel, singularDocumentInCollectionCaption, documentsInCollectionCaption, noDocumentsFoundLabel } = labels
 
 		return (
 			<div className={`crud-panel ${ docClassName } ${ className || '' }`}>
@@ -185,7 +186,12 @@ export class CrudPanel<T extends EntropicComponent> extends Component<CrudPanelP
 				{ ( layout==='itemsAlways' || layout === 'formAndItems'	|| mode === Mode.normal ) &&
 
 					<div className="collection-panel">
-						<h3>{ documentsInCollectionCaption }</h3>
+						<h3>
+							{ documents.length > 1
+								? documentsInCollectionCaption 
+								: singularDocumentInCollectionCaption || documentsInCollectionCaption
+							}
+						</h3>
 
 						<div className="documents">
 							{ cardAddButton &&

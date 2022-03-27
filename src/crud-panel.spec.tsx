@@ -11,6 +11,7 @@ const crudLabels: CrudPanelLabels = {
 	addButtonLabel: 'Add',
 	updateButtonLabel: 'Update',
 	documentsInCollectionCaption: 'Existing documents',
+	singularDocumentInCollectionCaption: 'Existing document',
 	noDocumentsFoundLabel: 'No documents found',
 }
 
@@ -85,7 +86,7 @@ describe( 'Crud Panel', ()=>{
 	let datasource: JsonDataSource
 
 	beforeEach( async ()=>{
-		datasource = new JsonDataSource({ ...mockData })
+		datasource = new JsonDataSource( JSON.parse( JSON.stringify( mockData )))
 		Store.useDataSource( datasource )
 		controller = new TestController()
 		notifySpy = jest.fn()
@@ -120,6 +121,29 @@ describe( 'Crud Panel', ()=>{
 		expect( docs.children.length ).toBe( 2 )
 	})
 
+	it( 'should show singular when only one existing document', async ()=>{
+		expect( screen.queryByText( 'Test prop 2' ) ).toBeInTheDocument()
+
+		const deleteButton = screen.getAllByRole( 'button', { name: deleteButtonLabel } )
+		userEvent.click( deleteButton[1] )
+		await waitFor( ()=>expect( notifySpy ).toHaveBeenCalled() )
+
+		const heading = screen.getByRole( 'heading', { name: crudLabels.singularDocumentInCollectionCaption })
+		expect( heading ).toBeInTheDocument()
+	})
+	
+	it( 'should show plural when only one existing document but empty singular caption', async ()=>{
+		crudLabels.singularDocumentInCollectionCaption = undefined
+		expect( screen.queryByText( 'Test prop 2' ) ).toBeInTheDocument()
+
+		const deleteButton = screen.getAllByRole( 'button', { name: deleteButtonLabel } )
+		userEvent.click( deleteButton[1] )
+		await waitFor( ()=>expect( notifySpy ).toHaveBeenCalled() )
+
+		const heading = screen.getByRole( 'heading', { name: crudLabels.documentsInCollectionCaption })
+		expect( heading ).toBeInTheDocument()
+	})
+	
 	describe( 'Accepts children as functions', ()=>{
 		beforeEach(() => {
 			renderResult.rerender(
