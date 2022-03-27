@@ -1,3 +1,10 @@
+# [3.1.0](https://github.com/entropic-bond/crud-panel/compare/v3.0.0...v3.1.0) (2022-03-27)
+
+
+### Features
+
+* singularDocumentInCollectionCaption ([9041e27](https://github.com/entropic-bond/crud-panel/commit/9041e271d5e31b2923df25c9a8c6ebd5aca00d61))
+
 # [3.0.0](https://github.com/entropic-bond/crud-panel/compare/v2.2.1...v3.0.0) (2022-03-03)
 
 
