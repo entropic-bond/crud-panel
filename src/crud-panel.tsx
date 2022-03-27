@@ -186,7 +186,7 @@ export class CrudPanel<T extends EntropicComponent> extends Component<CrudPanelP
 				{ ( layout==='itemsAlways' || layout === 'formAndItems'	|| mode === Mode.normal ) &&
 
 					<div className="collection-panel">
-						{ documents.length &&
+						{ documents.length > 0 &&
 							<h3>
 								{ documents.length > 1
 									? documentsInCollectionCaption 
