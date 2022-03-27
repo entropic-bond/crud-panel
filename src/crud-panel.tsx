@@ -186,12 +186,14 @@ export class CrudPanel<T extends EntropicComponent> extends Component<CrudPanelP
 				{ ( layout==='itemsAlways' || layout === 'formAndItems'	|| mode === Mode.normal ) &&
 
 					<div className="collection-panel">
-						<h3>
-							{ documents.length > 1
-								? documentsInCollectionCaption 
-								: singularDocumentInCollectionCaption || documentsInCollectionCaption
-							}
-						</h3>
+						{ documents.length &&
+							<h3>
+								{ documents.length > 1
+									? documentsInCollectionCaption 
+									: singularDocumentInCollectionCaption || documentsInCollectionCaption
+								}
+							</h3>
+						}
 
 						<div className="documents">
 							{ cardAddButton &&
