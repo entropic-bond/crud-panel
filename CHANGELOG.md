@@ -1,3 +1,10 @@
+## [3.1.1](https://github.com/entropic-bond/crud-panel/compare/v3.1.0...v3.1.1) (2022-03-27)
+
+
+### Bug Fixes
+
+* remove header on no documents in collection ([b51a75d](https://github.com/entropic-bond/crud-panel/commit/b51a75d1adda36d7ac5b8744e5b5b493c7ce7f99))
+
 # [3.1.0](https://github.com/entropic-bond/crud-panel/compare/v3.0.0...v3.1.0) (2022-03-27)
 
 
