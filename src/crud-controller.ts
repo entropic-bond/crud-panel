@@ -32,6 +32,10 @@ export abstract class CrudController<T extends EntropicComponent> {
 		return this.onChangeHdl.subscribe( observer )
 	}
 
+	protected notifyChange( event: CrudControllerEvent<T> ) {
+		this.onChangeHdl.notify( event )
+	}
+
 	newDocument() {
 		return this.setDocument( this.createDocument() )
 	}
