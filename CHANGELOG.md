@@ -1,3 +1,10 @@
+## [3.1.2](https://github.com/entropic-bond/crud-panel/compare/v3.1.1...v3.1.2) (2022-03-27)
+
+
+### Bug Fixes
+
+* remove 0 from header ([508ed6f](https://github.com/entropic-bond/crud-panel/commit/508ed6f2a8b3ab5d37f9326b07408a0ec5f4c13b))
+
 ## [3.1.1](https://github.com/entropic-bond/crud-panel/compare/v3.1.0...v3.1.1) (2022-03-27)
 
 
