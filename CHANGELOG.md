@@ -1,3 +1,10 @@
+# [3.2.0](https://github.com/entropic-bond/crud-panel/compare/v3.1.2...v3.2.0) (2022-03-29)
+
+
+### Features
+
+* allows to notify changes with method ([550ab17](https://github.com/entropic-bond/crud-panel/commit/550ab175be8117fa9706872eb1d84279a0a536de))
+
 ## [3.1.2](https://github.com/entropic-bond/crud-panel/compare/v3.1.1...v3.1.2) (2022-03-27)
 
 
