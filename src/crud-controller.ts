@@ -1,10 +1,13 @@
 import { Callback, EntropicComponent, Model, Observable, PropChangeEvent, Unsubscriber } from 'entropic-bond'
 import { ProgressController, ProgressEvent } from './progress-controller'
 
+type CrudControllerAction = 'saved' | 'deleted'
+
 export interface CrudControllerEvent<T extends EntropicComponent> {
 	documentProps?: PropChangeEvent<T> 
 	documentChanged?: T
 	documentCollection?: T[] | readonly T[]
+	action?: CrudControllerAction
 }
 
 export abstract class CrudController<T extends EntropicComponent> {
@@ -48,7 +51,8 @@ export abstract class CrudController<T extends EntropicComponent> {
 			await this.storeDoc()
 
 			this.onChangeHdl.notify({
-				documentCollection: await this.documentCollection()
+				documentCollection: await this.documentCollection(),
+				action: 'saved'
 			})
 		}
 		finally {
@@ -63,7 +67,8 @@ export abstract class CrudController<T extends EntropicComponent> {
 			await this.deleteDoc()
 
 			this.onChangeHdl.notify({
-				documentCollection: await this.documentCollection()
+				documentCollection: await this.documentCollection(),
+				action: 'deleted'
 			})
 		}
 		finally {
