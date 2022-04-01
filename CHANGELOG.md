@@ -1,3 +1,10 @@
+## [3.3.1](https://github.com/entropic-bond/crud-panel/compare/v3.3.0...v3.3.1) (2022-04-01)
+
+
+### Bug Fixes
+
+* add populated action ([b381e05](https://github.com/entropic-bond/crud-panel/commit/b381e053dce93b0cb14554769b5acb3caeb740fe))
+
 # [3.3.0](https://github.com/entropic-bond/crud-panel/compare/v3.2.0...v3.3.0) (2022-03-31)
 
 
