@@ -1,7 +1,7 @@
 import { Callback, EntropicComponent, Model, Observable, PropChangeEvent, Unsubscriber } from 'entropic-bond'
 import { ProgressController, ProgressEvent } from './progress-controller'
 
-type CrudControllerAction = 'saved' | 'deleted'
+type CrudControllerAction = 'saved' | 'deleted' | 'populated'
 
 export interface CrudControllerEvent<T extends EntropicComponent> {
 	documentProps?: PropChangeEvent<T> 
