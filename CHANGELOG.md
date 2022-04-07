@@ -1,3 +1,10 @@
+## [3.3.2](https://github.com/entropic-bond/crud-panel/compare/v3.3.1...v3.3.2) (2022-04-07)
+
+
+### Bug Fixes
+
+* react upgrade 18 ([ae0e21c](https://github.com/entropic-bond/crud-panel/commit/ae0e21c917006d4aa0e6d649fe05e068384a713f))
+
 ## [3.3.1](https://github.com/entropic-bond/crud-panel/compare/v3.3.0...v3.3.1) (2022-04-01)
 
 
