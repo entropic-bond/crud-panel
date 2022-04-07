@@ -101,7 +101,8 @@ describe( 'Crud Panel', ()=>{
 				<TestCard />
 			</CrudPanel>
 		)
-		await datasource.wait()
+		// await datasource.wait()
+		await screen.findByRole( 'heading' )
 	})
 
 	it( 'should show add button', ()=>{
@@ -125,10 +126,10 @@ describe( 'Crud Panel', ()=>{
 		expect( screen.queryByText( 'Test prop 2' ) ).toBeInTheDocument()
 
 		const deleteButton = screen.getAllByRole( 'button', { name: deleteButtonLabel } )
-		userEvent.click( deleteButton[1] )
+		await userEvent.click( deleteButton[1] )
 		await waitFor( ()=>expect( notifySpy ).toHaveBeenCalled() )
 
-		const heading = screen.getByRole( 'heading', { name: crudLabels.singularDocumentInCollectionCaption })
+		const heading = await screen.findByRole( 'heading', { name: crudLabels.singularDocumentInCollectionCaption })
 		expect( heading ).toBeInTheDocument()
 	})
 	
@@ -146,6 +147,7 @@ describe( 'Crud Panel', ()=>{
 	
 	describe( 'Accepts children as functions', ()=>{
 		beforeEach(() => {
+			userEvent.setup()
 			renderResult.rerender(
 				<CrudPanel controller={ controller } labels={ crudLabels }>
 					{ props => <TestView {...props}/> }
@@ -178,8 +180,8 @@ describe( 'Crud Panel', ()=>{
 
 	describe( 'Working with TestView', ()=> {
 		
-		it( 'should create an empty document view on add new document button click', ()=>{
-			userEvent.click( screen.getByRole( 'button', { name: crudLabels.addNewDocumentLabel } ) )
+		it( 'should create an empty document view on add new document button click', async ()=>{
+			await userEvent.click( screen.getByRole( 'button', { name: crudLabels.addNewDocumentLabel } ) )
 
 			expect( screen.getByRole( 'heading', { name: viewHeader }) ).toBeInTheDocument()
 			expect( 
@@ -187,22 +189,22 @@ describe( 'Crud Panel', ()=>{
 			).toHaveDisplayValue('')
 		})
 
-		it( 'should show detail view with document data on edit button click', ()=>{
+		it( 'should show detail view with document data on edit button click', async ()=>{
 			const testDoc = mockData.Test.test1
 			const editButton = screen.getAllByRole( 'button', { name: editButtonLabel } )
-			userEvent.click( editButton[0] )
+			await userEvent.click( editButton[0] )
 
 			expect( screen.getByRole( 'heading', { name: viewHeader }) ).toBeInTheDocument()
 			expect( screen.getByDisplayValue( testDoc.testProp ) ).toBeInTheDocument()
 		})
 
 		it( 'should refresh document list on new document added', async ()=>{
-			userEvent.click( screen.getByRole( 'button', { name: crudLabels.addNewDocumentLabel} ))
+			await userEvent.click( screen.getByRole( 'button', { name: crudLabels.addNewDocumentLabel} ))
 
 			const input = await screen.findByPlaceholderText( testViewPlaceholder ) as HTMLInputElement
-			userEvent.type( input, 'New and fancy Application') 
+			await userEvent.type( input, 'New and fancy Application') 
 
-			userEvent.click( screen.getByRole( 'button', { name: crudLabels.addButtonLabel } ) )
+			await userEvent.click( screen.getByRole( 'button', { name: crudLabels.addButtonLabel } ) )
 			const docs = screen.getByRole( 
 				'heading', { name: crudLabels.documentsInCollectionCaption }
 			).nextElementSibling as HTMLElement
@@ -216,11 +218,12 @@ describe( 'Crud Panel', ()=>{
 
 		it( 'should refresh document list on document edited', async ()=>{
 			const editButton = screen.getAllByRole( 'button', { name: editButtonLabel } )
-			userEvent.click( editButton[0] )
+			await userEvent.click( editButton[0] )
 
 			const input = await screen.findByPlaceholderText( testViewPlaceholder )
-			userEvent.paste( input, ' Edited' )
-			userEvent.click( screen.getByRole( 'button', { name: crudLabels.updateButtonLabel } ) )
+			await userEvent.click( input )
+			await userEvent.paste( ' Edited' )
+			await userEvent.click( screen.getByRole( 'button', { name: crudLabels.updateButtonLabel } ) )
 			await waitFor( ()=>expect( notifySpy ).toHaveBeenCalled() )
 
 			const docs = screen.getByRole( 
@@ -235,10 +238,12 @@ describe( 'Crud Panel', ()=>{
 			expect( screen.queryByText( 'Test prop 2' ) ).toBeInTheDocument()
 
 			const deleteButton = screen.getAllByRole( 'button', { name: deleteButtonLabel } )
-			userEvent.click( deleteButton[1] )
+			await userEvent.click( deleteButton[1] )
 			await waitFor( ()=>expect( notifySpy ).toHaveBeenCalled() )
 
-			expect( screen.queryByText( 'Test prop 2' ) ).not.toBeInTheDocument()
+			await waitFor( 
+				()=>expect( screen.queryByText( 'Test prop 2' ) ).not.toBeInTheDocument()
+			)
 		})
 
 	})
@@ -266,22 +271,22 @@ describe( 'Crud Panel', ()=>{
 			)
 		}
 
-		it( 'should show always collection items when default layout', ()=>{
+		it( 'should show always collection items when default layout', async ()=>{
 			expect( itemsView() ).toBeInTheDocument()
 			expect(	formView() ).not.toBeInTheDocument()
 
-			userEvent.click( addButton() )
+			await userEvent.click( addButton() )
 
 			expect( itemsView() ).toBeInTheDocument()
 			expect(	formView() ).toBeInTheDocument()
 		})
 
-		it( 'should show always collection items when layout set to itemsAlways', ()=>{
+		it( 'should show always collection items when layout set to itemsAlways', async ()=>{
 			renderWith( 'itemsAlways' )
 			expect( itemsView() ).toBeInTheDocument()
 			expect(	formView() ).not.toBeInTheDocument()
 
-			userEvent.click( addButton() )
+			await userEvent.click( addButton() )
 
 			expect( itemsView() ).toBeInTheDocument()
 			expect(	formView() ).toBeInTheDocument()
@@ -293,12 +298,12 @@ describe( 'Crud Panel', ()=>{
 			expect(	formView() ).toBeInTheDocument()
 		})
 
-		it( 'should alternate from form view to items view but not both when layout set to formOrItems', ()=>{
+		it( 'should alternate from form view to items view but not both when layout set to formOrItems', async ()=>{
 			renderWith( 'formOrItems' )
 			expect( itemsView() ).toBeInTheDocument()
 			expect(	formView() ).not.toBeInTheDocument()
 
-			userEvent.click( addButton() )
+			await userEvent.click( addButton() )
 
 			expect( itemsView() ).not.toBeInTheDocument()
 			expect(	formView() ).toBeInTheDocument()
