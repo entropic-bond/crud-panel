@@ -1,3 +1,11 @@
+## [3.3.4](https://github.com/entropic-bond/crud-panel/compare/v3.3.3...v3.3.4) (2022-04-26)
+
+
+### Bug Fixes
+
+* don't throw on undefined label ([b750fa4](https://github.com/entropic-bond/crud-panel/commit/b750fa4032d628b0485e196e0bc1487e6c1106df))
+* downgrade jest ([8b8724a](https://github.com/entropic-bond/crud-panel/commit/8b8724aa165587440d2c9913991514d16d7cf0ff))
+
 ## [3.3.3](https://github.com/entropic-bond/crud-panel/compare/v3.3.2...v3.3.3) (2022-04-21)
 
 
