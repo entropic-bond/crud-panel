@@ -122,29 +122,6 @@ describe( 'Crud Panel', ()=>{
 		expect( docs.children.length ).toBe( 2 )
 	})
 
-	it( 'should show singular when only one existing document', async ()=>{
-		expect( screen.queryByText( 'Test prop 2' ) ).toBeInTheDocument()
-
-		const deleteButton = screen.getAllByRole( 'button', { name: deleteButtonLabel } )
-		await userEvent.click( deleteButton[1] )
-		await waitFor( ()=>expect( notifySpy ).toHaveBeenCalled() )
-
-		const heading = await screen.findByRole( 'heading', { name: crudLabels.singularDocumentInCollectionCaption })
-		expect( heading ).toBeInTheDocument()
-	})
-	
-	it( 'should show plural when only one existing document but empty singular caption', async ()=>{
-		crudLabels.singularDocumentInCollectionCaption = undefined
-		expect( screen.queryByText( 'Test prop 2' ) ).toBeInTheDocument()
-
-		const deleteButton = screen.getAllByRole( 'button', { name: deleteButtonLabel } )
-		userEvent.click( deleteButton[1] )
-		await waitFor( ()=>expect( notifySpy ).toHaveBeenCalled() )
-
-		const heading = screen.getByRole( 'heading', { name: crudLabels.documentsInCollectionCaption })
-		expect( heading ).toBeInTheDocument()
-	})
-	
 	describe( 'Accepts children as functions', ()=>{
 		beforeEach(() => {
 			userEvent.setup()
@@ -312,6 +289,29 @@ describe( 'Crud Panel', ()=>{
 	})
 
 	describe( 'Labels', ()=>{
+		it( 'should show singular when only one existing document', async () => {
+			expect( screen.queryByText( 'Test prop 2' ) ).toBeInTheDocument()
+
+			const deleteButton = screen.getAllByRole( 'button', { name: deleteButtonLabel } )
+			await userEvent.click( deleteButton[ 1 ] )
+			await waitFor( () => expect( notifySpy ).toHaveBeenCalled() )
+
+			const heading = await screen.findByRole( 'heading', { name: crudLabels.singularDocumentInCollectionCaption } )
+			expect( heading ).toBeInTheDocument()
+		} )
+
+		it( 'should show plural when only one existing document but empty singular caption', async () => {
+			crudLabels.singularDocumentInCollectionCaption = undefined
+			expect( screen.queryByText( 'Test prop 2' ) ).toBeInTheDocument()
+
+			const deleteButton = screen.getAllByRole( 'button', { name: deleteButtonLabel } )
+			userEvent.click( deleteButton[ 1 ] )
+			await waitFor( () => expect( notifySpy ).toHaveBeenCalled() )
+
+			const heading = screen.getByRole( 'heading', { name: crudLabels.documentsInCollectionCaption } )
+			expect( heading ).toBeInTheDocument()
+		} )
+
 		it( 'should allow to pass labels as a function', async ()=>{
 			const labels = ( controller: CrudController<Test> ) => Object.entries( crudLabels )
 			.reduce( ( prev, [ key, label ] ) => {
@@ -345,5 +345,17 @@ describe( 'Crud Panel', ()=>{
 				screen.getByText( `${ crudLabels.documentsInCollectionCaption } ${ documentClassName }` ) 
 			).toBeInTheDocument()
 		})
+
+		it( 'should not throw on undefined labels', ()=>{
+			expect(
+				()=>renderResult.rerender(
+					<CrudPanel controller={ controller } labels={ undefined }>
+						<TestView />
+						<TestCard />
+					</CrudPanel>
+				)
+			).not.toThrow()
+		})
+		
 	})
 })

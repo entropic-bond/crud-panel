@@ -113,13 +113,12 @@ export class CrudPanel<T extends EntropicComponent> extends Component<CrudPanelP
 	private invokeContentViewChild( labels : CrudPanelLabels ) {
 		const { children, layout, controller } = this.props
 		const { mode } = this.state
-		const { addButtonLabel, updateButtonLabel } = labels
 		const closeOnCancel = layout !== 'formAndItems'
 		if ( !controller.document ) return
 
 		const props: CrudContentViewProps<T> = {
 			controller: controller,
-			submitButtonCaption: mode==Mode.edit? updateButtonLabel : addButtonLabel,
+			submitButtonCaption: mode==Mode.edit? labels?.updateButtonLabel : labels?.addButtonLabel,
 			onSubmit: ( document: T ) => this.storeDocument( document ),
 			onCancel: closeOnCancel
 				? ()=>this.setState({ mode: Mode.normal })
@@ -155,7 +154,7 @@ export class CrudPanel<T extends EntropicComponent> extends Component<CrudPanelP
 		const { mode, documents } = this.state
 		const { className, cardAddButton, controller } = this.props
 		const docClassName = snakeCase( controller.document?.className )
-		let labels = this.props.labels
+		let labels = this.props.labels || {} as CrudPanelLabels
 		const layout = this.props.layout || 'itemsAlways'
 
 		if ( typeof labels === 'function' ) labels = labels( controller )
