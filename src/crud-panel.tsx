@@ -196,11 +196,11 @@ export class CrudPanel<T extends EntropicComponent> extends Component<CrudPanelP
 
 						<div className="documents">
 							{ cardAddButton &&
-								<div className="card-add-button clickable" 
+								<div className="crud-card card-add-button clickable" 
 									onClick={ ()=> this.newDocument() }
 								>
-									{	cardAddButton }
-									{	addNewDocumentLabel	}
+									<div className="button-element">{	cardAddButton }</div>
+									<div className="add-label">{	addNewDocumentLabel	}</div>
 								</div>
 							}
 							{ documents.length
