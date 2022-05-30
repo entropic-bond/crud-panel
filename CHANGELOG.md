@@ -1,3 +1,10 @@
+## [3.4.1](https://github.com/entropic-bond/crud-panel/compare/v3.4.0...v3.4.1) (2022-05-30)
+
+
+### Bug Fixes
+
+* upgrade jest and ES6 ([060d9a4](https://github.com/entropic-bond/crud-panel/commit/060d9a46d45faef0373e3973c9ea04b0723246d5))
+
 # [3.4.0](https://github.com/entropic-bond/crud-panel/compare/v3.3.4...v3.4.0) (2022-05-02)
 
 
