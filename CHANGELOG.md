@@ -1,3 +1,10 @@
+# [3.4.0](https://github.com/entropic-bond/crud-panel/compare/v3.3.4...v3.4.0) (2022-05-02)
+
+
+### Features
+
+* card add button css classes ([2269e30](https://github.com/entropic-bond/crud-panel/commit/2269e30b1b339b2f08e62394f5380fb3eaba00b8))
+
 ## [3.3.4](https://github.com/entropic-bond/crud-panel/compare/v3.3.3...v3.3.4) (2022-04-26)
 
 
