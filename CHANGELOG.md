@@ -1,3 +1,10 @@
+## [3.4.2](https://github.com/entropic-bond/crud-panel/compare/v3.4.1...v3.4.2) (2022-06-20)
+
+
+### Bug Fixes
+
+* can extend CrudControllerEvent ([9d4e10b](https://github.com/entropic-bond/crud-panel/commit/9d4e10b2b3d6c8284ad877cefadd12be8ab48cd6))
+
 ## [3.4.1](https://github.com/entropic-bond/crud-panel/compare/v3.4.0...v3.4.1) (2022-05-30)
 
 
