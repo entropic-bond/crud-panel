@@ -1,5 +1,5 @@
 import { EntropicComponent, JsonDataSource, Model, persistent, registerPersistentClass, Store } from 'entropic-bond'
-import { CrudController } from './crud-controller'
+import { CrudController, CrudControllerEvent } from './crud-controller'
 
 const mockData = {
 	Test: {
@@ -29,6 +29,10 @@ export class Test extends EntropicComponent {
 	@persistent private _testProp: string
 }
 
+interface TestControllerEvent extends CrudControllerEvent<Test> {
+	newEvent: string
+}
+
 export class TestController extends CrudController<Test> {
 
 	createDocument(): Test {
@@ -41,6 +45,12 @@ export class TestController extends CrudController<Test> {
 
 	allRequiredPropertiesFilled(): boolean {
 		return true
+	}
+
+	notifyNewEvent() {
+		this.notifyChange<TestControllerEvent>({
+			newEvent: 'new event fired'
+		})
 	}
 }
 
@@ -78,4 +88,13 @@ describe( 'Crud Controller', ()=>{
 		})
 		
 	})
+
+	it( 'should notify new event', ()=>{
+		const spy = jest.fn()
+		controller.onChange( spy )
+		controller.notifyNewEvent()
+
+		expect( spy ).toHaveBeenCalledWith({ newEvent: 'new event fired' })
+	})
+	
 })

@@ -35,7 +35,7 @@ export abstract class CrudController<T extends EntropicComponent> {
 		return this.onChangeHdl.subscribe( observer )
 	}
 
-	protected notifyChange( event: CrudControllerEvent<T> ) {
+	protected notifyChange<U extends CrudControllerEvent<T>>( event: U ) {
 		this.onChangeHdl.notify( event )
 	}
 
