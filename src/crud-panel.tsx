@@ -203,8 +203,8 @@ export class CrudPanel<T extends EntropicComponent> extends Component<CrudPanelP
 									<div className="add-label">{	addNewDocumentLabel	}</div>
 								</div>
 							}
-							{ documents.length
-								? documents.map( document => this.invokeDetailViewChild( document ) )
+							{ documents?.length
+								? documents.map( (document: T) => this.invokeDetailViewChild( document ) )
 								: <p>{ noDocumentsFoundLabel }</p>
 							}
 						</div>
