@@ -1,3 +1,10 @@
+## [3.4.6](https://github.com/entropic-bond/crud-panel/compare/v3.4.5...v3.4.6) (2022-10-20)
+
+
+### Bug Fixes
+
+* error event returns Error instance ([b8cab3e](https://github.com/entropic-bond/crud-panel/commit/b8cab3e7013f90371c55ff8f73988872cfab749d))
+
 ## [3.4.5](https://github.com/entropic-bond/crud-panel/compare/v3.4.4...v3.4.5) (2022-10-20)
 
 
