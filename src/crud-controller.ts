@@ -8,6 +8,7 @@ export interface CrudControllerEvent<T extends EntropicComponent> {
 	documentChanged?: T
 	documentCollection?: T[] | readonly T[]
 	action?: CrudControllerAction
+	error?: string
 }
 
 export abstract class CrudController<T extends EntropicComponent> {
@@ -55,6 +56,9 @@ export abstract class CrudController<T extends EntropicComponent> {
 				action: 'saved'
 			})
 		}
+		catch( error ) {
+			this.onChangeHdl.notify({ error })
+		}
 		finally {
 			this.progressController.notifyBusy( false, progressStage )
 		}
@@ -71,6 +75,9 @@ export abstract class CrudController<T extends EntropicComponent> {
 				action: 'deleted'
 			})
 		}
+		catch( error ) {
+			this.onChangeHdl.notify({ error })
+		}
 		finally {
 			this.progressController.notifyBusy( false, progressStage )
 		}
@@ -82,6 +89,9 @@ export abstract class CrudController<T extends EntropicComponent> {
 		try {
 			this.progressController.notifyBusy( true, progressStage )
 			var found = await this.findDocs( limit )
+		}
+		catch( error ) {
+			this.onChangeHdl.notify({ error })
 		}
 		finally {
 			this.progressController.notifyBusy( false, progressStage )
