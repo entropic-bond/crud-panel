@@ -1,3 +1,10 @@
+## [3.4.3](https://github.com/entropic-bond/crud-panel/compare/v3.4.2...v3.4.3) (2022-10-20)
+
+
+### Bug Fixes
+
+* emit event on database operation failure ([2d10759](https://github.com/entropic-bond/crud-panel/commit/2d1075990c7f1eba934a0d529dad02e487349dfd))
+
 ## [3.4.2](https://github.com/entropic-bond/crud-panel/compare/v3.4.1...v3.4.2) (2022-06-20)
 
 
