@@ -8,7 +8,7 @@ export interface CrudControllerEvent<T extends EntropicComponent> {
 	documentChanged?: T
 	documentCollection?: T[] | readonly T[]
 	action?: CrudControllerAction
-	error?: string
+	error?: Error
 }
 
 export abstract class CrudController<T extends EntropicComponent> {
@@ -57,7 +57,7 @@ export abstract class CrudController<T extends EntropicComponent> {
 			})
 		}
 		catch( error ) {
-			this.onChangeHdl.notify({ error })
+			this.onChangeHdl.notify({ error: this.errorToError( error ) })
 		}
 		finally {
 			this.progressController.notifyBusy( false, progressStage )
@@ -76,7 +76,7 @@ export abstract class CrudController<T extends EntropicComponent> {
 			})
 		}
 		catch( error ) {
-			this.onChangeHdl.notify({ error })
+			this.onChangeHdl.notify({ error: this.errorToError( error ) })
 		}
 		finally {
 			this.progressController.notifyBusy( false, progressStage )
@@ -91,7 +91,7 @@ export abstract class CrudController<T extends EntropicComponent> {
 			var found = await this.findDocs( limit )
 		}
 		catch( error ) {
-			this.onChangeHdl.notify({ error })
+			this.onChangeHdl.notify({ error: this.errorToError( error ) })
 		}
 		finally {
 			this.progressController.notifyBusy( false, progressStage )
@@ -125,6 +125,14 @@ export abstract class CrudController<T extends EntropicComponent> {
 	
 	get document(): T {
 		return this._document
+	}
+
+	protected errorToError( error: any ): Error {
+		if ( error instanceof Error ) return error
+		if ( typeof error === 'string' ) return new Error( error )
+		if ( 'code' in error ) return new Error( error.code )
+		if ( 'message' in error ) return new Error( error.error )
+		return new Error( JSON.stringify( error ) )
 	}
 
 	protected progressController: ProgressController = new ProgressController()
