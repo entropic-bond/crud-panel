@@ -1,3 +1,10 @@
+## [3.4.4](https://github.com/entropic-bond/crud-panel/compare/v3.4.3...v3.4.4) (2022-10-20)
+
+
+### Bug Fixes
+
+* undefined comparation ([587ddc5](https://github.com/entropic-bond/crud-panel/commit/587ddc5b9051e4cb1aa833a2b0e7287b54ff0829))
+
 ## [3.4.3](https://github.com/entropic-bond/crud-panel/compare/v3.4.2...v3.4.3) (2022-10-20)
 
 
