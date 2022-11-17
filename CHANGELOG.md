@@ -1,3 +1,10 @@
+## [3.4.7](https://github.com/entropic-bond/crud-panel/compare/v3.4.6...v3.4.7) (2022-11-17)
+
+
+### Bug Fixes
+
+* do not throw on undefined document ([184149d](https://github.com/entropic-bond/crud-panel/commit/184149dc9fd52b1f1069be51bb26b7bb9254b6c2))
+
 ## [3.4.6](https://github.com/entropic-bond/crud-panel/compare/v3.4.5...v3.4.6) (2022-10-20)
 
 
