@@ -110,8 +110,13 @@ export abstract class CrudController<T extends EntropicComponent> {
 
 	setDocument( value: T ): CrudController<T> {
 		if ( this._document !== value ) {
+
 			if ( this.unsubscribeDocument ) this.unsubscribeDocument()
-			this.unsubscribeDocument = value.onChange( e => this.onChangeHdl.notify({ documentProps: e } ) )
+
+			if ( value ) {
+				this.unsubscribeDocument = value.onChange( e => this.onChangeHdl.notify({ documentProps: e } ) )
+			}
+
 			this._document = value
 			this.onChangeHdl.notify({ documentChanged: this._document })
 		}

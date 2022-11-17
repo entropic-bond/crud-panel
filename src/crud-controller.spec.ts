@@ -96,5 +96,12 @@ describe( 'Crud Controller', ()=>{
 
 		expect( spy ).toHaveBeenCalledWith({ newEvent: 'new event fired' })
 	})
+
+	it( 'should not throw setting an undefined document', ()=>{
+		expect(()=>{
+			controller.setDocument( undefined )
+		}).not.toThrow()
+	})
+	
 	
 })

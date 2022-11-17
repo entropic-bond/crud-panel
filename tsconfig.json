@@ -10,7 +10,7 @@
     "rootDir": "src/",
 		"resolveJsonModule": true,
     "lib": [
-      "esnext", "DOM"
+      "esnext"
     ],
     "declaration": true,
     "experimentalDecorators": true,
