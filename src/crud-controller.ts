@@ -104,7 +104,7 @@ export abstract class CrudController<T extends EntropicComponent> {
 		return this.progressController.onProgress( observer )
 	}
 
-	protected get model() {
+	get model() {
 		return this._model || ( this._model = this.getModel() )
 	}
 
