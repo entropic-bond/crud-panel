@@ -1,3 +1,10 @@
+## [3.5.1](https://github.com/entropic-bond/crud-panel/compare/v3.5.0...v3.5.1) (2022-11-30)
+
+
+### Bug Fixes
+
+* revoke last commit. model should remain protected ([3cdf5d1](https://github.com/entropic-bond/crud-panel/commit/3cdf5d1ae7d4a8ce8205c6960725930adbc485ac))
+
 # [3.5.0](https://github.com/entropic-bond/crud-panel/compare/v3.4.7...v3.5.0) (2022-11-30)
 
 
