@@ -1,3 +1,10 @@
+# [3.5.0](https://github.com/entropic-bond/crud-panel/compare/v3.4.7...v3.5.0) (2022-11-30)
+
+
+### Features
+
+* make model public ([4c39157](https://github.com/entropic-bond/crud-panel/commit/4c39157dcc6b50ff83bd5b65ad59c2d33a881120))
+
 ## [3.4.7](https://github.com/entropic-bond/crud-panel/compare/v3.4.6...v3.4.7) (2022-11-17)
 
 
