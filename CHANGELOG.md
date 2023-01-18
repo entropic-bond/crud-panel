@@ -1,3 +1,10 @@
+## [3.5.2](https://github.com/entropic-bond/crud-panel/compare/v3.5.1...v3.5.2) (2023-01-18)
+
+
+### Bug Fixes
+
+* npm-upgrade ([b98b8c7](https://github.com/entropic-bond/crud-panel/commit/b98b8c7d57c9ff7194e830c761896b56a9145be0))
+
 ## [3.5.1](https://github.com/entropic-bond/crud-panel/compare/v3.5.0...v3.5.1) (2022-11-30)
 
 
