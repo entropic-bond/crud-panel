@@ -40,7 +40,7 @@ export class TestController extends CrudController<Test> {
 	}
 
 	protected getModel(): Model<Test> {
-		return Store.getModel( 'Test' )
+		return Store.getModel<Test>( 'Test' )
 	}
 
 	allRequiredPropertiesFilled(): boolean {
