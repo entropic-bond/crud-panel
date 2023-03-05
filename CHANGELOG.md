@@ -1,3 +1,10 @@
+## [3.5.3](https://github.com/entropic-bond/crud-panel/compare/v3.5.2...v3.5.3) (2023-03-05)
+
+
+### Bug Fixes
+
+* remove readonly from retrieved documents ([cadd887](https://github.com/entropic-bond/crud-panel/commit/cadd88761dd45ba04a1b79420006386b50f5998b))
+
 ## [3.5.2](https://github.com/entropic-bond/crud-panel/compare/v3.5.1...v3.5.2) (2023-01-18)
 
 
