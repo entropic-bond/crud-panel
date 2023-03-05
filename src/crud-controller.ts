@@ -6,7 +6,7 @@ type CrudControllerAction = 'saved' | 'deleted' | 'populated'
 export interface CrudControllerEvent<T extends EntropicComponent> {
 	documentProps?: PropChangeEvent<T> 
 	documentChanged?: T
-	documentCollection?: T[] | readonly T[]
+	documentCollection?: T[]
 	action?: CrudControllerAction
 	error?: Error
 }
@@ -28,7 +28,7 @@ export abstract class CrudController<T extends EntropicComponent> {
 		return this.model.delete( this.document.id )
 	}
 
-	protected findDocs( limit: number ): Promise<T[] | readonly T[]> {
+	protected findDocs( limit: number ): Promise<T[]> {
 		return this.model.find().limit( limit ).get()
 	}
 	
@@ -83,7 +83,7 @@ export abstract class CrudController<T extends EntropicComponent> {
 		}
 	}
 		
-	async documentCollection( limit?: number ): Promise<T[] | readonly T[]> {
+	async documentCollection( limit?: number ): Promise<T[]> {
 		const progressStage = 'Retrieving document collection'
 
 		try {

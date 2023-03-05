@@ -29,7 +29,7 @@ export interface CrudPanelLabels {
 export type Layout = 'formOrItems' | 'itemsAlways' | 'formAndItems'
 
 interface CrudPanelState<T extends EntropicComponent> {
-	documents: T[] | readonly T[]
+	documents: T[]
 	mode: Mode
 }
 
