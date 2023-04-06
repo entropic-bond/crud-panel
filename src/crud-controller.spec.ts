@@ -104,6 +104,18 @@ describe( 'Crud Controller', ()=>{
 	})
 
 	describe( 'Error handling', ()=>{
+		beforeEach(()=>{		
+			datasource.simulateError({
+				store: 'store test error',
+				delete: 'delete test error',
+				find: 'find test error',
+				findById: 'findById test error',
+			})
+			controller.setDocument( new Test() )
+		})
+
+		afterEach(()=>datasource.simulateError( undefined ))
+
 		describe( 'without observable', ()=>{
 			beforeEach(()=>controller.setDocument( new Test() ))
 			
@@ -121,17 +133,6 @@ describe( 'Crud Controller', ()=>{
 		})
 
 		describe( 'with observable', ()=>{
-			beforeEach(()=>{		
-				datasource.simulateError({
-					store: 'store test error',
-					delete: 'delete test error',
-					find: 'find test error',
-					findById: 'findById test error',
-				})
-				controller.setDocument( new Test() )
-			})
-
-			afterEach(()=>datasource.simulateError( undefined ))
 		
 			it( 'should notify of an error on deleteDocument', async ()=>{
 				const spy = jest.fn()
