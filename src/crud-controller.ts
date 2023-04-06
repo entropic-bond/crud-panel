@@ -8,7 +8,7 @@ export interface CrudControllerEvent<T extends EntropicComponent> {
 	documentChanged?: T
 	documentCollection?: T[]
 	action?: CrudControllerAction
-	error?: Error
+	/** deprecated */	error?: Error 
 }
 
 export abstract class CrudController<T extends EntropicComponent> {
@@ -36,6 +36,17 @@ export abstract class CrudController<T extends EntropicComponent> {
 		return this.onChangeHdl.subscribe( observer )
 	}
 
+	/**
+	 * Notifies the observer of any error that occurs during the execution of the controller.
+	 * If there are no subscribers to this event, the error will be thrown.
+	 * 
+	 * @param observer 
+	 * @returns the unsubscriber function
+	 */
+	onError( observer: Callback<Error> ) {
+		return this.onErrorHdl.subscribe( observer )
+	}
+
 	protected notifyChange<U extends CrudControllerEvent<T>>( event: U ) {
 		this.onChangeHdl.notify( event )
 	}
@@ -58,6 +69,8 @@ export abstract class CrudController<T extends EntropicComponent> {
 		}
 		catch( error ) {
 			this.onChangeHdl.notify({ error: this.errorToError( error ) })
+			this.onErrorHdl.notify( this.errorToError( error ))
+			if ( this.throwOnError ) throw error
 		}
 		finally {
 			this.progressController.notifyBusy( false, progressStage )
@@ -77,6 +90,8 @@ export abstract class CrudController<T extends EntropicComponent> {
 		}
 		catch( error ) {
 			this.onChangeHdl.notify({ error: this.errorToError( error ) })
+			this.onErrorHdl.notify( this.errorToError( error ))
+			if ( this.throwOnError ) throw error
 		}
 		finally {
 			this.progressController.notifyBusy( false, progressStage )
@@ -92,6 +107,8 @@ export abstract class CrudController<T extends EntropicComponent> {
 		}
 		catch( error ) {
 			this.onChangeHdl.notify({ error: this.errorToError( error ) })
+			this.onErrorHdl.notify( this.errorToError( error ))
+			if ( this.throwOnError ) throw error
 		}
 		finally {
 			this.progressController.notifyBusy( false, progressStage )
@@ -140,8 +157,13 @@ export abstract class CrudController<T extends EntropicComponent> {
 		return new Error( JSON.stringify( error ) )
 	}
 
+	protected get throwOnError() {
+		return this.onErrorHdl.subscribersCount === 0 
+	}
+
 	protected progressController: ProgressController = new ProgressController()
 	protected onChangeHdl: Observable<CrudControllerEvent<T>> = new Observable<CrudControllerEvent<T>>()
+	protected onErrorHdl: Observable<Error> = new Observable<Error>()
 	private _model: Model<T>
 	private _document: T
 	private unsubscribeDocument: Unsubscriber

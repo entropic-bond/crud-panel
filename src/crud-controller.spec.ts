@@ -59,8 +59,8 @@ describe( 'Crud Controller', ()=>{
 	let datasource: JsonDataSource
 	let onProgress: jest.Mock
 
-	beforeEach(()=>{
-		datasource = new JsonDataSource({ ...mockData })
+	beforeAll(()=>{
+		datasource = new JsonDataSource(JSON.parse(JSON.stringify( mockData )))
 		Store.useDataSource( datasource )
 		controller = new TestController()
 		onProgress = jest.fn()
@@ -102,6 +102,58 @@ describe( 'Crud Controller', ()=>{
 			controller.setDocument( undefined )
 		}).not.toThrow()
 	})
-	
-	
+
+	describe( 'Error handling', ()=>{
+		describe( 'without observable', ()=>{
+			beforeEach(()=>controller.setDocument( new Test() ))
+			
+			it( 'should reject of an error on deleteDocument', async ()=>{
+				expect( controller.deleteDocument() ).rejects.toThrow( 'delete test error' )
+			})
+		
+			it( 'should reject of an error on storeDocument', async ()=>{
+				expect( controller.storeDocument() ).rejects.toThrow( 'store test error' )
+			})
+		
+			it( 'should reject of an error on documentCollection', async ()=>{
+				expect( controller.documentCollection() ).rejects.toThrow( 'find test error' )
+			})
+		})
+
+		describe( 'with observable', ()=>{
+			beforeEach(()=>{		
+				datasource.simulateError({
+					store: 'store test error',
+					delete: 'delete test error',
+					find: 'find test error',
+					findById: 'findById test error',
+				})
+				controller.setDocument( new Test() )
+			})
+
+			afterEach(()=>datasource.simulateError( undefined ))
+		
+			it( 'should notify of an error on deleteDocument', async ()=>{
+				const spy = jest.fn()
+				controller.onError( spy )
+				await controller.deleteDocument()
+				expect( spy ).toHaveBeenCalledWith( Error( 'delete test error' ) )
+			})
+		
+			it( 'should notify of an error on storeDocument', async ()=>{
+				const spy = jest.fn()
+				controller.onError( spy )
+				await controller.storeDocument()
+				expect( spy ).toHaveBeenCalledWith( Error( 'store test error' ) )
+			})
+		
+			it( 'should notify of an error on documentCollection', async ()=>{
+				const spy = jest.fn()
+				controller.onError( spy )
+				await controller.documentCollection()
+				expect( spy ).toHaveBeenCalledWith( Error( 'find test error' ) )
+			})
+		
+		})
+	})
 })
