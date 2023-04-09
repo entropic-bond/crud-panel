@@ -1,3 +1,15 @@
+# [3.6.0](https://github.com/entropic-bond/crud-panel/compare/v3.5.3...v3.6.0) (2023-04-06)
+
+
+### Bug Fixes
+
+* simulate error ([b0fb3ba](https://github.com/entropic-bond/crud-panel/commit/b0fb3ba059813161f2c1b13aadb161d27fcc68db))
+
+
+### Features
+
+* error observable ([a940501](https://github.com/entropic-bond/crud-panel/commit/a94050154403d3bf09e500356b41cfbbb2e626d1))
+
 ## [3.5.3](https://github.com/entropic-bond/crud-panel/compare/v3.5.2...v3.5.3) (2023-03-05)
 
 
