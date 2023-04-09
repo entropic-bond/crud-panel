@@ -12,6 +12,10 @@ export interface CrudControllerEvent<T extends EntropicComponent> {
 }
 
 export abstract class CrudController<T extends EntropicComponent> {
+	static readonly errorMessages = {
+		missedDocument: 'No document to save',
+	}
+
 	constructor( document?: T ) {
 		this.setDocument( document || this.createDocument() )
 	}
@@ -21,15 +25,18 @@ export abstract class CrudController<T extends EntropicComponent> {
 	protected abstract getModel(): Model<T> 
 	
 	protected storeDoc(): Promise<void> {
+		if ( !this.document ) throw new Error( CrudController.errorMessages.missedDocument )
 		return this.model.save( this.document )
 	}
 
 	protected deleteDoc(): Promise<void> {
+		if ( !this.document ) throw new Error( CrudController.errorMessages.missedDocument )
 		return this.model.delete( this.document.id )
 	}
 
-	protected findDocs( limit: number ): Promise<T[]> {
-		return this.model.find().limit( limit ).get()
+	protected findDocs( limit?: number ): Promise<T[]> {
+		if ( !limit ) return this.model.find().get()
+		else return this.model.find().limit( limit ).get()
 	}
 	
 	onChange( observer: Callback<CrudControllerEvent<T>> ) {
@@ -114,7 +121,7 @@ export abstract class CrudController<T extends EntropicComponent> {
 			this.progressController.notifyBusy( false, progressStage )
 		}
 
-		return found
+		return found!
 	}
 
 	onProgress( observer: Callback<ProgressEvent> ) {
@@ -125,7 +132,7 @@ export abstract class CrudController<T extends EntropicComponent> {
 		return this._model || ( this._model = this.getModel() )
 	}
 
-	setDocument( value: T ): CrudController<T> {
+	setDocument( value: T | undefined ): CrudController<T> {
 		if ( this._document !== value ) {
 
 			if ( this.unsubscribeDocument ) this.unsubscribeDocument()
@@ -141,11 +148,11 @@ export abstract class CrudController<T extends EntropicComponent> {
 		return this
 	}
 
-	set document( value: T ) {
+	set document( value: T | undefined ) {
 		this.setDocument( value )
 	}
 	
-	get document(): T {
+	get document(): T | undefined {
 		return this._document
 	}
 
@@ -164,7 +171,7 @@ export abstract class CrudController<T extends EntropicComponent> {
 	protected progressController: ProgressController = new ProgressController()
 	protected onChangeHdl: Observable<CrudControllerEvent<T>> = new Observable<CrudControllerEvent<T>>()
 	protected onErrorHdl: Observable<Error> = new Observable<Error>()
-	private _model: Model<T>
-	private _document: T
-	private unsubscribeDocument: Unsubscriber
+	private _model: Model<T> | undefined
+	private _document: T | undefined
+	private unsubscribeDocument: Unsubscriber | undefined
 }
