@@ -1,3 +1,10 @@
+# [3.7.0](https://github.com/entropic-bond/crud-panel/compare/v3.6.0...v3.7.0) (2023-04-09)
+
+
+### Features
+
+* strictNullCheck compliant ([c70e851](https://github.com/entropic-bond/crud-panel/commit/c70e851f5d439fa3f2f20ae0889c67904117186d))
+
 # [3.6.0](https://github.com/entropic-bond/crud-panel/compare/v3.5.3...v3.6.0) (2023-04-06)
 
 
