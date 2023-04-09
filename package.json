@@ -61,7 +61,7 @@
     "react-dom": "^18.2.0",
     "semantic-release": "^21.0.1",
     "ts-jest": "^29.1.0",
-    "typescript": "^5.0.3"
+    "typescript": "^5.0.4"
   },
   "husky": {
     "hooks": {
@@ -69,6 +69,6 @@
     }
   },
   "dependencies": {
-    "entropic-bond": "^1.40.7"
+    "entropic-bond": "^1.41.0"
   }
 }
