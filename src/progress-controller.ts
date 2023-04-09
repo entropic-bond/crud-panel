@@ -19,7 +19,7 @@ export interface ProgressEvent {
 export class ProgressController {
 	notifyBusy( busy: boolean, name?: string ) {
 		this.pushStage({
-			name, progress: busy? 0 : 1, total: 1
+			name: name ?? '', progress: busy? 0 : 1, total: 1
 		})
 	}
 

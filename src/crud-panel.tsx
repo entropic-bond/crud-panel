@@ -6,8 +6,8 @@ enum Mode { normal, add, edit }
 
 export interface CrudCardProps<T extends EntropicComponent> {
 	document: T
-	onSelect?: ( document: T ) => void
-	onDelete?: ( document: T ) => void
+	onSelect: ( document: T ) => void
+	onDelete: ( document: T ) => void
 }
 
 export interface CrudContentViewProps<T extends EntropicComponent> {
@@ -35,7 +35,7 @@ interface CrudPanelState<T extends EntropicComponent> {
 
 interface CrudPanelProps<T extends EntropicComponent> {
 	controller: CrudController<T>	
-	labels: CrudPanelLabels | ( ( controller: CrudController<T> ) => CrudPanelLabels )
+	labels?: CrudPanelLabels | ( ( controller: CrudController<T> ) => CrudPanelLabels )
 	layout?: Layout
 	children: [
 		( ( props: CrudContentViewProps<T> ) => ReactElement ) | ReactElement<CrudContentViewProps<T>>,
@@ -58,7 +58,7 @@ export class CrudPanel<T extends EntropicComponent> extends Component<CrudPanelP
 		}
 	}
 
-	async componentDidMount() {
+	override async componentDidMount() {
 		const { controller } = this.props
 
 		this.unsubscriber = controller.onChange( event => {
@@ -75,8 +75,8 @@ export class CrudPanel<T extends EntropicComponent> extends Component<CrudPanelP
 		})
 	}
 
-	componentWillUnmount() {
-		this.unsubscriber()
+	override componentWillUnmount() {
+		this.unsubscriber?.()
 	}
 
 	private newDocument() {
@@ -150,7 +150,7 @@ export class CrudPanel<T extends EntropicComponent> extends Component<CrudPanelP
 		}
 	}
 
-	render() {
+	override render() {
 		const { mode, documents } = this.state
 		const { className, cardAddButton, controller } = this.props
 		const docClassName = snakeCase( controller.document?.className )
@@ -215,5 +215,5 @@ export class CrudPanel<T extends EntropicComponent> extends Component<CrudPanelP
 		)
 	}
 
-	private unsubscriber: Unsubscriber
+	private unsubscriber: Unsubscriber | undefined
 }

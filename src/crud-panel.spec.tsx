@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { render, RenderResult, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { JsonDataSource, Store } from 'entropic-bond'
+import { JsonDataSource, Require, Store } from 'entropic-bond'
 import { CrudContentViewProps, CrudPanel, CrudPanelLabels, CrudCardProps, Layout } from './crud-panel'
 import { CrudController } from './crud-controller'
 import { Test, TestController } from './crud-controller.spec'
@@ -37,18 +37,18 @@ const mockData = {
 }
 
 class TestView extends Component<Partial<CrudContentViewProps<Test>>> {
-	componentDidMount(): void {
+	override componentDidMount(): void {
 		const { controller } = this.props
 		
-		controller.onChange( e => {
+		controller?.onChange( e => {
 			if ( e.documentProps ) this.setState( e.documentProps )
 		})
 	}
 
-	render() {
+	override render() {
 		const { controller, onCancel, onSubmit, submitButtonCaption } = this.props
-		const { document } = controller
-
+		const { document } = controller!
+		if ( !document ) return <></>
 
 		return (
 			<div>
@@ -58,7 +58,7 @@ class TestView extends Component<Partial<CrudContentViewProps<Test>>> {
 					value={ document.testProp || '' } 
 					onChange={ e => document.testProp = e.target.value } 
 				/>
-				<button onClick={ ()=>onSubmit( document ) }>{ submitButtonCaption }</button>
+				<button onClick={ ()=>onSubmit?.( document ) }>{ submitButtonCaption }</button>
 				<button onClick={ onCancel }>{ cancelButtonCaption }</button>
 			</div>
 		)
@@ -66,14 +66,15 @@ class TestView extends Component<Partial<CrudContentViewProps<Test>>> {
 }
 
 class TestCard extends Component<Partial<CrudCardProps<Test>>> {
-	render() {
+	override render() {
 		const { document, onDelete, onSelect } = this.props
+		if ( !document ) return <></>
 
 		return (
 			<div>
 				<p>{ document?.testProp }</p>
-				<button onClick={ ()=>onSelect( document ) }>{ editButtonLabel }</button>
-				<button onClick={ ()=>onDelete( document ) }>{ deleteButtonLabel }</button>
+				<button onClick={ ()=>onSelect?.( document ) }>{ editButtonLabel }</button>
+				<button onClick={ ()=>onDelete?.( document ) }>{ deleteButtonLabel }</button>
 			</div>  
 		)
 	}
@@ -169,7 +170,7 @@ describe( 'Crud Panel', ()=>{
 		it( 'should show detail view with document data on edit button click', async ()=>{
 			const testDoc = mockData.Test.test1
 			const editButton = screen.getAllByRole( 'button', { name: editButtonLabel } )
-			await userEvent.click( editButton[0] )
+			await userEvent.click( editButton[0]! )
 
 			expect( screen.getByRole( 'heading', { name: viewHeader }) ).toBeInTheDocument()
 			expect( screen.getByDisplayValue( testDoc.testProp ) ).toBeInTheDocument()
@@ -195,7 +196,7 @@ describe( 'Crud Panel', ()=>{
 
 		it( 'should refresh document list on document edited', async ()=>{
 			const editButton = screen.getAllByRole( 'button', { name: editButtonLabel } )
-			await userEvent.click( editButton[0] )
+			await userEvent.click( editButton[0]! )
 
 			const input = await screen.findByPlaceholderText( testViewPlaceholder )
 			await userEvent.click( input )
@@ -215,7 +216,7 @@ describe( 'Crud Panel', ()=>{
 			expect( screen.queryByText( 'Test prop 2' ) ).toBeInTheDocument()
 
 			const deleteButton = screen.getAllByRole( 'button', { name: deleteButtonLabel } )
-			await userEvent.click( deleteButton[1] )
+			await userEvent.click( deleteButton[1]! )
 			await waitFor( ()=>expect( notifySpy ).toHaveBeenCalled() )
 
 			await waitFor( 
@@ -293,7 +294,7 @@ describe( 'Crud Panel', ()=>{
 			expect( screen.queryByText( 'Test prop 2' ) ).toBeInTheDocument()
 
 			const deleteButton = screen.getAllByRole( 'button', { name: deleteButtonLabel } )
-			await userEvent.click( deleteButton[ 1 ] )
+			await userEvent.click( deleteButton[ 1 ]! )
 			await waitFor( () => expect( notifySpy ).toHaveBeenCalled() )
 
 			const heading = await screen.findByRole( 'heading', { name: crudLabels.singularDocumentInCollectionCaption } )
@@ -305,7 +306,7 @@ describe( 'Crud Panel', ()=>{
 			expect( screen.queryByText( 'Test prop 2' ) ).toBeInTheDocument()
 
 			const deleteButton = screen.getAllByRole( 'button', { name: deleteButtonLabel } )
-			userEvent.click( deleteButton[ 1 ] )
+			userEvent.click( deleteButton[ 1 ]! )
 			await waitFor( () => expect( notifySpy ).toHaveBeenCalled() )
 
 			const heading = screen.getByRole( 'heading', { name: crudLabels.documentsInCollectionCaption } )
@@ -315,7 +316,7 @@ describe( 'Crud Panel', ()=>{
 		it( 'should allow to pass labels as a function', async ()=>{
 			const labels = ( controller: CrudController<Test> ) => Object.entries( crudLabels )
 			.reduce( ( prev, [ key, label ] ) => {
-				prev[ key ] = `${ label } ${ controller.document.className }`
+				prev[ key ] = `${ label } ${ controller.document?.className }`
 				return prev
 			},{}) as CrudPanelLabels
 			

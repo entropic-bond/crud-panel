@@ -18,15 +18,15 @@ const mockData = {
 
 @registerPersistentClass( 'Test' )
 export class Test extends EntropicComponent {
-	set testProp( value: string ) {
+	set testProp( value: string | undefined ) {
 		this.changeProp('testProp', value )
 	}
 	
-	get testProp(): string {
+	get testProp(): string | undefined {
 		return this._testProp
 	}
 	
-	@persistent private _testProp: string
+	@persistent private _testProp: string | undefined
 }
 
 interface TestControllerEvent extends CrudControllerEvent<Test> {
