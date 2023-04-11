@@ -156,6 +156,19 @@ export abstract class CrudController<T extends EntropicComponent> {
 		return this._document
 	}
 
+	/**
+	 * Use this method to throw an error in a controlled way.
+	 * It will notify the subscribers of the `onError` event and throw the error 
+	 * if there are no subscribers to the `onError` event.
+	 * 
+	 * @param error the error to throw
+	 */
+	protected managedThrow( error: Error | string | any ) {
+		/* deprecated */ this.onChangeHdl.notify({ error: this.errorToError( error ) })
+		this.onErrorHdl.notify( this.errorToError( error ))
+		if ( this.throwOnError ) throw this.errorToError( error )
+	}
+
 	protected errorToError( error: any ): Error {
 		if ( error instanceof Error ) return error
 		if ( typeof error === 'string' ) return new Error( error )

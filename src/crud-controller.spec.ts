@@ -25,7 +25,7 @@ export class Test extends EntropicComponent {
 	get testProp(): string | undefined {
 		return this._testProp
 	}
-	
+
 	@persistent private _testProp: string | undefined
 }
 
@@ -52,6 +52,11 @@ export class TestController extends CrudController<Test> {
 			newEvent: 'new event fired'
 		})
 	}
+
+	callManagedThrow() {
+		this.managedThrow( new Error('test error') )
+	}
+
 }
 
 describe( 'Crud Controller', ()=>{
@@ -119,6 +124,12 @@ describe( 'Crud Controller', ()=>{
 		describe( 'without observable', ()=>{
 			beforeEach(()=>controller.setDocument( new Test() ))
 			
+			it( 'should throw on managedThrow', ()=>{
+				expect(()=>{
+					controller.callManagedThrow()
+				}).toThrow( 'test error' )
+			})
+
 			it( 'should reject of an error on deleteDocument', async ()=>{
 				expect( controller.deleteDocument() ).rejects.toThrow( 'delete test error' )
 			})
@@ -134,6 +145,13 @@ describe( 'Crud Controller', ()=>{
 
 		describe( 'with observable', ()=>{
 		
+			it( 'should notify of an error on managedThrow', ()=>{
+				const spy = jest.fn()
+				controller.onError( spy )
+				controller.callManagedThrow()
+				expect( spy ).toHaveBeenCalledWith( Error( 'test error' ) )
+			})
+			
 			it( 'should notify of an error on deleteDocument', async ()=>{
 				const spy = jest.fn()
 				controller.onError( spy )
