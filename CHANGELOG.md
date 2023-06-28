@@ -1,3 +1,10 @@
+# [3.8.0](https://github.com/entropic-bond/crud-panel/compare/v3.7.0...v3.8.0) (2023-04-11)
+
+
+### Features
+
+* managedThrow ([2b06a18](https://github.com/entropic-bond/crud-panel/commit/2b06a18b093f9217c01353aaab0980ffe0eaf064))
+
 # [3.7.0](https://github.com/entropic-bond/crud-panel/compare/v3.6.0...v3.7.0) (2023-04-09)
 
 
