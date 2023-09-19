@@ -1,3 +1,10 @@
+# [3.9.0](https://github.com/entropic-bond/crud-panel/compare/v3.8.1...v3.9.0) (2023-09-19)
+
+
+### Features
+
+* introduce filter function ([bdfc75f](https://github.com/entropic-bond/crud-panel/commit/bdfc75f769a93328d5b65f03f0a1a10ece921519))
+
 ## [3.8.1](https://github.com/entropic-bond/crud-panel/compare/v3.8.0...v3.8.1) (2023-06-28)
 
 
