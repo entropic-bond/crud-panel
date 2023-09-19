@@ -1,7 +1,7 @@
 import { Callback, EntropicComponent, Model, Observable, PropChangeEvent, Unsubscriber } from 'entropic-bond'
 import { ProgressController, ProgressEvent } from './progress-controller'
 
-type CrudControllerAction = 'saved' | 'deleted' | 'populated'
+type CrudControllerAction = 'saved' | 'deleted' | 'populated' | 'filtered'
 
 export interface CrudControllerEvent<T extends EntropicComponent> {
 	documentProps?: PropChangeEvent<T> 
@@ -34,9 +34,27 @@ export abstract class CrudController<T extends EntropicComponent> {
 		return this.model.delete( this.document.id )
 	}
 
-	protected findDocs( limit?: number ): Promise<T[]> {
-		if ( !limit ) return this.model.find().get()
-		else return this.model.find().limit( limit ).get()
+	protected async findDocs( limit?: number ): Promise<T[]> {
+		let query = this.model.find()
+
+		if ( limit ) query = query.limit( limit )
+
+		const docs = await query.get()
+
+		if ( !this._filter ) return docs
+		return docs.filter( doc => this._filter?.( doc ))
+	}
+
+	/**
+	 * Sets a filter function to filter in memory the documents returned by the `documentCollection` method.
+	 * 
+	 * @param filter the filter function
+	 * @returns the controller itself
+	 */
+	setFilter( filter: ( document: T ) => boolean ) {
+		this._filter = filter
+		this.onChangeHdl.notify({ action: 'filtered' })
+		return this
 	}
 	
 	onChange( observer: Callback<CrudControllerEvent<T>> ) {
@@ -187,4 +205,5 @@ export abstract class CrudController<T extends EntropicComponent> {
 	private _model: Model<T> | undefined
 	private _document: T | undefined
 	private unsubscribeDocument: Unsubscriber | undefined
+	private _filter: (( document: T ) => boolean ) | undefined
 }

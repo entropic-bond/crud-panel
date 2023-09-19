@@ -64,7 +64,7 @@ describe( 'Crud Controller', ()=>{
 	let datasource: JsonDataSource
 	let onProgress: jest.Mock
 
-	beforeAll(()=>{
+	beforeEach(()=>{
 		datasource = new JsonDataSource(JSON.parse(JSON.stringify( mockData )))
 		Store.useDataSource( datasource )
 		controller = new TestController()
@@ -106,6 +106,22 @@ describe( 'Crud Controller', ()=>{
 		expect(()=>{
 			controller.setDocument( undefined )
 		}).not.toThrow()
+	})
+
+	it( 'should notify on filter set', ()=>{
+		const spy = jest.fn()
+		controller.onChange( spy )
+		controller.setFilter( ()=>true )
+
+		expect( spy ).toHaveBeenCalledWith({ action: 'filtered' })
+	})
+
+	it( 'should return a filtered collection', async ()=>{
+		const collection = await controller.documentCollection()
+		expect( collection.length ).toBe( 2 )
+		controller.setFilter( doc => doc.id === 'test1' )
+		const filteredCollection = await controller.documentCollection()
+		expect( filteredCollection.length ).toBe( 1 )
 	})
 
 	describe( 'Error handling', ()=>{
