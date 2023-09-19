@@ -1,7 +1,7 @@
 import { Callback, EntropicComponent, Model, Observable, PropChangeEvent, Unsubscriber } from 'entropic-bond'
 import { ProgressController, ProgressEvent } from './progress-controller'
 
-type CrudControllerAction = 'saved' | 'deleted' | 'populated' | 'filtered'
+type CrudControllerAction = 'saved' | 'deleted' | 'populated'
 
 export interface CrudControllerEvent<T extends EntropicComponent> {
 	documentProps?: PropChangeEvent<T> 
@@ -39,10 +39,7 @@ export abstract class CrudController<T extends EntropicComponent> {
 
 		if ( limit ) query = query.limit( limit )
 
-		const docs = await query.get()
-
-		if ( !this._filter ) return docs
-		return docs.filter( doc => this._filter?.( doc ))
+		return query.get()
 	}
 
 	/**
@@ -51,9 +48,9 @@ export abstract class CrudController<T extends EntropicComponent> {
 	 * @param filter the filter function
 	 * @returns the controller itself
 	 */
-	setFilter( filter: ( document: T ) => boolean ) {
+	async setFilter( filter: ( document: T ) => boolean ) {
 		this._filter = filter
-		this.onChangeHdl.notify({ action: 'filtered' })
+		this.onChangeHdl.notify({ documentCollection: await this.documentCollection() })
 		return this
 	}
 	
@@ -139,7 +136,9 @@ export abstract class CrudController<T extends EntropicComponent> {
 			this.progressController.notifyBusy( false, progressStage )
 		}
 
-		return found!
+
+		if ( !this._filter ) return found!
+		return found!.filter( doc => this._filter?.( doc ))
 	}
 
 	onProgress( observer: Callback<ProgressEvent> ) {

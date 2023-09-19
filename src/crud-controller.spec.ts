@@ -108,12 +108,12 @@ describe( 'Crud Controller', ()=>{
 		}).not.toThrow()
 	})
 
-	it( 'should notify on filter set', ()=>{
+	it( 'should notify on filter set', async ()=>{
 		const spy = jest.fn()
 		controller.onChange( spy )
-		controller.setFilter( ()=>true )
+		await controller.setFilter( ()=>true )
 
-		expect( spy ).toHaveBeenCalledWith({ action: 'filtered' })
+		expect( spy ).toHaveBeenCalledWith({ documentCollection: expect.anything() })
 	})
 
 	it( 'should return a filtered collection', async ()=>{
