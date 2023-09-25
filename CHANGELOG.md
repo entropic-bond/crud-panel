@@ -1,3 +1,10 @@
+## [3.9.1](https://github.com/entropic-bond/crud-panel/compare/v3.9.0...v3.9.1) (2023-09-19)
+
+
+### Bug Fixes
+
+* filter ([160fa14](https://github.com/entropic-bond/crud-panel/commit/160fa142e03e317a80fb560590594820db80d05a))
+
 # [3.9.0](https://github.com/entropic-bond/crud-panel/compare/v3.8.1...v3.9.0) (2023-09-19)
 
 
