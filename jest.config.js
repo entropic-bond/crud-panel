@@ -22,6 +22,5 @@ module.exports = {
 	testEnvironment: 'jsdom',
 	setupFilesAfterEnv: [
 		"<rootDir>/jest-addons/setup-tests.ts"
-	],
-	resolver: "<rootDir>/jest-addons/resolver.js",
+	]
 }
