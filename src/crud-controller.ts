@@ -1,4 +1,4 @@
-import { Callback, EntropicComponent, Model, Observable, PropChangeEvent, Unsubscriber } from 'entropic-bond'
+import { Callback, ClassPropNames, EntropicComponent, Model, Observable, PropChangeEvent, Unsubscriber } from 'entropic-bond'
 import { ProgressController, ProgressEvent } from './progress-controller'
 
 type CrudControllerAction = 'saved' | 'deleted' | 'populated'
@@ -11,6 +11,11 @@ export interface CrudControllerEvent<T extends EntropicComponent> {
 	/** deprecated */	error?: Error 
 }
 
+type ValidatorFunction<V> = ( value: V ) => boolean 
+type ValidatorCollection<T extends EntropicComponent> = {
+	[ prop in ClassPropNames<T> ]: ValidatorFunction<T[prop]>
+}
+
 export abstract class CrudController<T extends EntropicComponent> {
 	static readonly errorMessages = {
 		missedDocument: 'No document to save',
@@ -20,10 +25,40 @@ export abstract class CrudController<T extends EntropicComponent> {
 		this.setDocument( document || this.createDocument() )
 	}
 
-	abstract allRequiredPropertiesFilled(): boolean
 	protected abstract createDocument(): T 
 	protected abstract getModel(): Model<T> 
 	
+	allRequiredPropertiesFilled(): boolean {
+		return this.nonFilledRequiredProperties.length <= 0
+	}
+
+	get nonFilledRequiredProperties(): ClassPropNames<T>[] {
+		return this.requiredProperties.filter( prop => this.validateProp( prop ))
+	}
+
+	get requiredProperties(): ClassPropNames<T>[] {
+		if ( !this.document ) throw new Error( CrudController.errorMessages.missedDocument )
+
+		return this.document.getPersistentProperties()
+			.filter( prop => prop.required )
+			.map( prop => prop.name ) as ClassPropNames<T>[]
+	}
+
+	addValidator<P extends ClassPropNames<T>>( prop: P, validatorFn: ValidatorFunction<T[P]> ) {
+		this.validator[ prop ] = validatorFn
+	}
+
+	removeValidator( prop: ClassPropNames<T> ) {
+		delete this.validator[ prop ]
+	}
+
+	private validateProp( prop: ClassPropNames<T> ): boolean {
+		if ( !this.document ) throw new Error( CrudController.errorMessages.missedDocument )
+
+		const propVal = this.document[ prop ]
+		return this.validator[ prop ]? !this.validator[ prop ]( propVal ) : !propVal
+	}
+
 	protected storeDoc(): Promise<void> {
 		if ( !this.document ) throw new Error( CrudController.errorMessages.missedDocument )
 		return this.model.save( this.document )
@@ -205,4 +240,5 @@ export abstract class CrudController<T extends EntropicComponent> {
 	private _document: T | undefined
 	private unsubscribeDocument: Unsubscriber | undefined
 	private _filter: (( document: T ) => boolean ) | undefined
+	private validator = {} as ValidatorCollection<T>
 }

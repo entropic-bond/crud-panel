@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { render, RenderResult, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { JsonDataSource, Require, Store } from 'entropic-bond'
+import { JsonDataSource, Store } from 'entropic-bond'
 import { CrudContentViewProps, CrudPanel, CrudPanelLabels, CrudCardProps, Layout } from './crud-panel'
 import { CrudController } from './crud-controller'
 import { Test, TestController } from './crud-controller.spec'

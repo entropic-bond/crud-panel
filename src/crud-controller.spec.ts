@@ -1,4 +1,4 @@
-import { EntropicComponent, JsonDataSource, Model, persistent, registerPersistentClass, Store } from 'entropic-bond'
+import { EntropicComponent, JsonDataSource, Model, persistent, registerPersistentClass, required, Store } from 'entropic-bond'
 import { CrudController, CrudControllerEvent } from './crud-controller'
 
 const mockData = {
@@ -26,7 +26,7 @@ export class Test extends EntropicComponent {
 		return this._testProp
 	}
 
-	@persistent private _testProp: string | undefined
+	@required @persistent private _testProp: string | undefined
 }
 
 interface TestControllerEvent extends CrudControllerEvent<Test> {
@@ -41,10 +41,6 @@ export class TestController extends CrudController<Test> {
 
 	protected getModel(): Model<Test> {
 		return Store.getModel<Test>( 'Test' )
-	}
-
-	allRequiredPropertiesFilled(): boolean {
-		return true
 	}
 
 	notifyNewEvent() {
@@ -189,6 +185,28 @@ describe( 'Crud Controller', ()=>{
 				expect( spy ).toHaveBeenCalledWith( Error( 'find test error' ) )
 			})
 		
+		})
+	})
+
+	describe( 'Required properties', ()=>{
+		it( 'should return false if not all required properties are filled', ()=>{
+			expect( controller.allRequiredPropertiesFilled() ).toBe( false )
+		})
+
+		it( 'should return true if all required properties are filled', ()=>{
+			controller.document!.testProp = 'test'
+			expect( controller.allRequiredPropertiesFilled() ).toBe( true )
+		})
+
+		it( 'should retrieve required properties', ()=>{
+			expect( controller.requiredProperties ).toEqual( ['testProp'] )
+		})
+
+		it( 'should work with registered prop validator', ()=>{
+			controller.addValidator( 'testProp', ( value )=>value === 'test' )
+			expect( controller.allRequiredPropertiesFilled() ).toBe( false )
+			controller.document!.testProp = 'test'
+			expect( controller.allRequiredPropertiesFilled() ).toBe( true )
 		})
 	})
 })
