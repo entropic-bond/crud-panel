@@ -63,15 +63,22 @@ export class CrudPanel<T extends EntropicComponent> extends Component<CrudPanelP
 
 		this.unsubscriber = controller.onChange( event => {
 			if ( event.documentCollection ) {
+				this.unfilteredDocuments = event.documentCollection
 				this.setState({
-					documents: controller.filter( event.documentCollection )
+					documents: controller.filter( this.unfilteredDocuments )
+				})
+			}
+			if ( event.action === 'filterChange' ) {
+				this.setState({
+					documents: controller.filter( this.unfilteredDocuments )
 				})
 			}
 			else this.setState({})
 		})
 
+		this.unfilteredDocuments = await controller.documentCollection()
 		this.setState({
-			documents: controller.filter( await controller.documentCollection() )
+			documents: controller.filter( this.unfilteredDocuments )
 		})
 	}
 
@@ -232,4 +239,5 @@ export class CrudPanel<T extends EntropicComponent> extends Component<CrudPanelP
 	}
 
 	private unsubscriber: Unsubscriber | undefined
+	private unfilteredDocuments: T[] = []
 }
