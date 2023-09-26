@@ -217,7 +217,9 @@ export class CrudPanel<T extends EntropicComponent> extends Component<CrudPanelP
 				
 				}
 				
-				{ this.props.footer || <></> }
+				<div className="footer">
+					{ this.props.footer || <></> }
+				</div>
 			</div>
 		)
 	}
