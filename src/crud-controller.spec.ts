@@ -109,14 +109,14 @@ describe( 'Crud Controller', ()=>{
 		controller.onChange( spy )
 		await controller.setFilter( ()=>true )
 
-		expect( spy ).toHaveBeenCalledWith({ documentCollection: expect.anything() })
+		expect( spy ).toHaveBeenCalledWith({ action: 'filterChange' })
 	})
 
 	it( 'should return a filtered collection', async ()=>{
 		const collection = await controller.documentCollection()
 		expect( collection.length ).toBe( 2 )
 		controller.setFilter( doc => doc.id === 'test1' )
-		const filteredCollection = await controller.documentCollection()
+		const filteredCollection = controller.filter( await controller.documentCollection() )
 		expect( filteredCollection.length ).toBe( 1 )
 	})
 

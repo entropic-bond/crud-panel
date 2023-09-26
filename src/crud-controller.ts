@@ -1,7 +1,7 @@
 import { Callback, ClassPropNames, EntropicComponent, Model, Observable, PropChangeEvent, Unsubscriber } from 'entropic-bond'
 import { ProgressController, ProgressEvent } from './progress-controller'
 
-type CrudControllerAction = 'saved' | 'deleted' | 'populated'
+type CrudControllerAction = 'saved' | 'deleted' | 'populated' | 'filterChange'
 
 export interface CrudControllerEvent<T extends EntropicComponent> {
 	documentProps?: PropChangeEvent<T> 
@@ -85,7 +85,7 @@ export abstract class CrudController<T extends EntropicComponent> {
 	 */
 	async setFilter( filter: ( document: T ) => boolean ) {
 		this._filter = filter
-		this.onChangeHdl.notify({ documentCollection: await this.documentCollection() })
+		this.onChangeHdl.notify({ action: 'filterChange' })
 		return this
 	}
 	
@@ -157,10 +157,11 @@ export abstract class CrudController<T extends EntropicComponent> {
 		
 	async documentCollection( limit?: number ): Promise<T[]> {
 		const progressStage = 'Retrieving document collection'
-
+		let found: T[] = []
+		
 		try {
 			this.progressController.notifyBusy( true, progressStage )
-			var found = await this.findDocs( limit )
+			found = await this.findDocs( limit )
 		}
 		catch( error ) {
 			this.onChangeHdl.notify({ error: this.errorToError( error ) })
@@ -171,9 +172,11 @@ export abstract class CrudController<T extends EntropicComponent> {
 			this.progressController.notifyBusy( false, progressStage )
 		}
 
+		return found
+	}
 
-		if ( !this._filter ) return found!
-		return found!.filter( doc => this._filter?.( doc ))
+	filter( docs: T[] ): T[] {
+		return docs.filter( doc => this._filter?.( doc ) ?? true )
 	}
 
 	onProgress( observer: Callback<ProgressEvent> ) {

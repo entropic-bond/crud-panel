@@ -64,14 +64,14 @@ export class CrudPanel<T extends EntropicComponent> extends Component<CrudPanelP
 		this.unsubscriber = controller.onChange( event => {
 			if ( event.documentCollection ) {
 				this.setState({
-					documents: event.documentCollection
+					documents: controller.filter( event.documentCollection )
 				})
 			}
 			else this.setState({})
 		})
 
 		this.setState({
-			documents: await controller.documentCollection()
+			documents: controller.filter( await controller.documentCollection() )
 		})
 	}
 
