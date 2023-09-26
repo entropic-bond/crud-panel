@@ -165,10 +165,15 @@ export class CrudPanel<T extends EntropicComponent> extends Component<CrudPanelP
 			<div className={`crud-panel ${ docClassName } ${ className || '' }`}>
 
 				{ mode === Mode.normal && layout !== 'formAndItems' && !cardAddButton &&
+					<div className="header">
 
-					<button onClick={ ()=> this.newDocument() }>
-						{	addNewDocumentLabel	}
-					</button>
+						{ this.props.header || <></> }
+
+						<button onClick={ ()=> this.newDocument() }>
+							{	addNewDocumentLabel	}
+						</button>
+
+					</div>
 
 				}
 
@@ -211,6 +216,8 @@ export class CrudPanel<T extends EntropicComponent> extends Component<CrudPanelP
 					</div>
 				
 				}
+				
+				{ this.props.footer || <></> }
 			</div>
 		)
 	}
