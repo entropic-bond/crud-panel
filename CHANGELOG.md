@@ -1,3 +1,11 @@
+## [3.10.2](https://github.com/entropic-bond/crud-panel/compare/v3.10.1...v3.10.2) (2023-09-26)
+
+
+### Bug Fixes
+
+* better header footer control ([28f712d](https://github.com/entropic-bond/crud-panel/commit/28f712dee7b8b2ad4c6a5336575c59cfe4b4bd89))
+* footer div classname ([fdb240a](https://github.com/entropic-bond/crud-panel/commit/fdb240a6abb92d06a992917de31f448c2cce5ed3))
+
 ## [3.10.1](https://github.com/entropic-bond/crud-panel/compare/v3.10.0...v3.10.1) (2023-09-26)
 
 
