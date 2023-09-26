@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { render, RenderResult, screen, waitFor, within } from '@testing-library/react'
+import { act, render, RenderResult, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { JsonDataSource, Store } from 'entropic-bond'
 import { CrudContentViewProps, CrudPanel, CrudPanelLabels, CrudCardProps, Layout } from './crud-panel'
@@ -93,17 +93,19 @@ describe( 'Crud Panel', ()=>{
 		notifySpy = jest.fn()
 		controller.onChange( notifySpy )
 
-		renderResult = render(
-			<CrudPanel 
-				controller={ controller } 
-				labels={ crudLabels }
-			>
-				<TestView />
-				<TestCard />
-			</CrudPanel>
-		)
+		await act( async ()=>{
+			renderResult = render(
+				<CrudPanel 
+					controller={ controller } 
+					labels={ crudLabels }
+				>
+					<TestView />
+					<TestCard />
+				</CrudPanel>
+			)
+		})
 		// await datasource.wait()
-		await screen.findByRole( 'heading' )
+		// await screen.findByRole( 'heading' )
 	})
 
 	it( 'should show add button', ()=>{
@@ -121,6 +123,51 @@ describe( 'Crud Panel', ()=>{
 		expect( within( docs ).getByText( 'Test prop 1' )	).toBeInTheDocument()
 		expect( within( docs ).getByText( 'Test prop 2' )	).toBeInTheDocument()
 		expect( docs.children.length ).toBe( 2 )
+	})
+
+	it( 'should show header', async ()=>{
+		await act( async ()=>{
+			renderResult.rerender(
+				<CrudPanel 
+					controller={ controller } 
+					labels={ crudLabels }
+					header={ ( controller, newDocument, labels ) => (
+						<div>
+							<p>{ labels.addNewDocumentLabel } in here</p>
+							<p>{ controller.document?.className }</p>
+						</div>
+					)}
+				>
+					<TestView />
+					<TestCard />
+				</CrudPanel>
+			)
+		})
+		expect( screen.getByText( controller.document?.className! ) ).toBeInTheDocument()
+		expect( screen.getByText( 'Add new document in here' ) ).toBeInTheDocument()
+		expect( screen.queryByRole( 'button', { name: 'Add new document' } ) ).not.toBeInTheDocument()
+	})
+
+	it( 'should show footer', async ()=>{
+		await act( async ()=>{
+			renderResult.rerender(
+				<CrudPanel 
+					controller={ controller } 
+					labels={ crudLabels }
+					footer={ ( controller, newDocument, labels ) => (
+						<div>
+							<p>{ labels.addNewDocumentLabel } in here</p>
+							<p>{ controller.document?.className }</p>
+						</div>
+					)}
+				>
+					<TestView />
+					<TestCard />
+				</CrudPanel>
+			)
+		})
+		expect( screen.getByText( controller.document?.className! ) ).toBeInTheDocument()
+		expect( screen.getByText( 'Add new document in here' ) ).toBeInTheDocument()
 	})
 
 	describe( 'Accepts children as functions', ()=>{
