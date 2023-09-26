@@ -43,8 +43,8 @@ interface CrudPanelProps<T extends EntropicComponent> {
 	]
 	className?: string
 	cardAddButton?: boolean | JSX.Element
-	header?: string | JSX.Element
-	footer?: string | JSX.Element
+	header?: string | JSX.Element | ( ( controller: CrudController<T>, newDocumentAction: ()=>void, labels: CrudPanelLabels ) => string | JSX.Element )
+	footer?: string | JSX.Element | ( ( controller: CrudController<T>, newDocumentAction: ()=>void, labels: CrudPanelLabels ) => string | JSX.Element )
 }
 
 export class CrudPanel<T extends EntropicComponent> extends Component<CrudPanelProps<T>, CrudPanelState<T>> {
@@ -167,11 +167,14 @@ export class CrudPanel<T extends EntropicComponent> extends Component<CrudPanelP
 				{ mode === Mode.normal && layout !== 'formAndItems' && !cardAddButton &&
 					<div className="header">
 
-						{ this.props.header || <></> }
-
-						<button onClick={ ()=> this.newDocument() }>
-							{	addNewDocumentLabel	}
-						</button>
+						{ this.props.header
+							? typeof this.props.header === 'function'
+								? this.props.header( controller, ()=> this.newDocument(), labels )
+								: this.props.header
+							:	<button onClick={ ()=> this.newDocument() }>
+									{	addNewDocumentLabel	}
+								</button>
+						}
 
 					</div>
 
@@ -218,7 +221,11 @@ export class CrudPanel<T extends EntropicComponent> extends Component<CrudPanelP
 				}
 				
 				<div className="footer">
-					{ this.props.footer || <></> }
+					{ this.props.footer &&
+						typeof this.props.footer === 'function'
+							? this.props.footer( controller, ()=> this.newDocument(), labels )
+							: this.props.footer
+					}
 				</div>
 			</div>
 		)
