@@ -1,3 +1,15 @@
+# [3.10.0](https://github.com/entropic-bond/crud-panel/compare/v3.9.1...v3.10.0) (2023-09-25)
+
+
+### Bug Fixes
+
+* no include tests in build ([14b214c](https://github.com/entropic-bond/crud-panel/commit/14b214cd8a2c73b5af18b3290db9ebe545f8f0cc))
+
+
+### Features
+
+* required props ([e098fde](https://github.com/entropic-bond/crud-panel/commit/e098fdeb32501c4ef0aee688ea386a69f57565d5))
+
 ## [3.9.1](https://github.com/entropic-bond/crud-panel/compare/v3.9.0...v3.9.1) (2023-09-19)
 
 
