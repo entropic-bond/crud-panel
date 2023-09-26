@@ -1,3 +1,11 @@
+## [3.10.3](https://github.com/entropic-bond/crud-panel/compare/v3.10.2...v3.10.3) (2023-09-26)
+
+
+### Bug Fixes
+
+* filters ([3c4c721](https://github.com/entropic-bond/crud-panel/commit/3c4c7218d0675954f6606aefd4afbed9eff9f0d3))
+* jest ([4def1fc](https://github.com/entropic-bond/crud-panel/commit/4def1fcf9c306bced3ab9340192bf10836c56368))
+
 ## [3.10.2](https://github.com/entropic-bond/crud-panel/compare/v3.10.1...v3.10.2) (2023-09-26)
 
 
