@@ -88,6 +88,16 @@ export abstract class CrudController<T extends EntropicComponent> {
 		this.onChangeHdl.notify({ action: 'filterChange' })
 		return this
 	}
+
+	/**
+	 * Removes the filter function set by the `setFilter` method.
+	 * @returns the controller itself
+	 */
+	resetFilter() {
+		this._filter = undefined
+		this.onChangeHdl.notify({ action: 'filterChange' })
+		return this
+	}
 	
 	onChange( observer: Callback<CrudControllerEvent<T>> ) {
 		return this.onChangeHdl.subscribe( observer )
