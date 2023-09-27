@@ -1,3 +1,10 @@
+## [3.10.5](https://github.com/entropic-bond/crud-panel/compare/v3.10.4...v3.10.5) (2023-09-27)
+
+
+### Bug Fixes
+
+* add resetFilter ([1404d78](https://github.com/entropic-bond/crud-panel/commit/1404d78f0a69f2b08e394aaf13d4f87bb76b641c))
+
 ## [3.10.4](https://github.com/entropic-bond/crud-panel/compare/v3.10.3...v3.10.4) (2023-09-26)
 
 
