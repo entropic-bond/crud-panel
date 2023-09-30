@@ -1,3 +1,10 @@
+## [4.0.1](https://github.com/entropic-bond/crud-panel/compare/v4.0.0...v4.0.1) (2023-09-30)
+
+
+### Bug Fixes
+
+* use queryDocs instead of findDocs ([f0679b0](https://github.com/entropic-bond/crud-panel/commit/f0679b05713a25f5db4797ec08ca0c0d0931f0d4))
+
 # [4.0.0](https://github.com/entropic-bond/crud-panel/compare/v3.11.0...v4.0.0) (2023-09-30)
 
 
