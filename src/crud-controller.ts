@@ -75,12 +75,23 @@ export abstract class CrudController<T extends EntropicComponent> {
 	 * @param limit the maximum number of documents to retrieve
 	 * @returns a query to retrieve the documents
 	 */
-	protected findDocs( limit?: number ): Query<T> {
+	protected queryDocs( limit?: number ): Query<T> {
 		let query = this.model.find()
 
 		if ( limit ) query = query.limit( limit )
 
 		return query
+	}
+
+	/**
+	 * Override this method to customize the query used to retrieve the documents.
+	 * 
+	 * @param limit the maximum number of documents to retrieve
+	 * @returns a query to retrieve the documents
+	 * @deprecated use `queryDocs` instead
+	 */
+	protected findDocs( limit?: number ): Query<T> {
+		return this.queryDocs( limit )
 	}
 
 	/**
@@ -177,7 +188,7 @@ export abstract class CrudController<T extends EntropicComponent> {
 		
 		try {
 			this.progressController.notifyBusy( true, progressStage )
-			found = await this.findDocs( limit ).get()
+			found = await this.queryDocs( limit ).get()
 		}
 		catch( error ) {
 			this.onChangeHdl.notify({ error: this.errorToError( error ) })
@@ -203,7 +214,7 @@ export abstract class CrudController<T extends EntropicComponent> {
 		return this._model || ( this._model = this.getModel() )
 	}
 
-	setDocument( value: T ): CrudController<T> {
+	setDocument( value: T ): this {
 		if ( this._document !== value ) {
 
 			if ( this.unsubscribeDocument ) this.unsubscribeDocument()
