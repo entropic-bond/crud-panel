@@ -1,3 +1,10 @@
+# [3.11.0](https://github.com/entropic-bond/crud-panel/compare/v3.10.5...v3.11.0) (2023-09-30)
+
+
+### Features
+
+* findDocs to return Query<T> instead of collection ([ae41b24](https://github.com/entropic-bond/crud-panel/commit/ae41b24b4b6c3efc97713ff1f08ad042ea6bce1a))
+
 ## [3.10.5](https://github.com/entropic-bond/crud-panel/compare/v3.10.4...v3.10.5) (2023-09-27)
 
 
