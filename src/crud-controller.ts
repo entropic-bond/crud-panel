@@ -1,4 +1,4 @@
-import { Callback, ClassPropNames, EntropicComponent, Model, Observable, PropChangeEvent, Unsubscriber } from 'entropic-bond'
+import { Callback, ClassPropNames, EntropicComponent, Model, Observable, PropChangeEvent, Unsubscriber, Query } from 'entropic-bond'
 import { ProgressController, ProgressEvent } from './progress-controller'
 
 type CrudControllerAction = 'saved' | 'deleted' | 'populated' | 'filterChange'
@@ -69,12 +69,12 @@ export abstract class CrudController<T extends EntropicComponent> {
 		return this.model.delete( this.document.id )
 	}
 
-	protected async findDocs( limit?: number ): Promise<T[]> {
+	protected findDocs( limit?: number ): Query<T> {
 		let query = this.model.find()
 
 		if ( limit ) query = query.limit( limit )
 
-		return query.get()
+		return query
 	}
 
 	/**
@@ -171,7 +171,7 @@ export abstract class CrudController<T extends EntropicComponent> {
 		
 		try {
 			this.progressController.notifyBusy( true, progressStage )
-			found = await this.findDocs( limit )
+			found = await this.findDocs( limit ).get()
 		}
 		catch( error ) {
 			this.onChangeHdl.notify({ error: this.errorToError( error ) })
