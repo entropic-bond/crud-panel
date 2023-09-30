@@ -69,6 +69,12 @@ export abstract class CrudController<T extends EntropicComponent> {
 		return this.model.delete( this.document.id )
 	}
 
+	/**
+	 * Override this method to customize the query used to retrieve the documents.
+	 * 
+	 * @param limit the maximum number of documents to retrieve
+	 * @returns a query to retrieve the documents
+	 */
 	protected findDocs( limit?: number ): Query<T> {
 		let query = this.model.find()
 
@@ -197,7 +203,7 @@ export abstract class CrudController<T extends EntropicComponent> {
 		return this._model || ( this._model = this.getModel() )
 	}
 
-	setDocument( value: T | undefined ): CrudController<T> {
+	setDocument( value: T ): CrudController<T> {
 		if ( this._document !== value ) {
 
 			if ( this.unsubscribeDocument ) this.unsubscribeDocument()
@@ -213,11 +219,11 @@ export abstract class CrudController<T extends EntropicComponent> {
 		return this
 	}
 
-	set document( value: T | undefined ) {
+	set document( value: T ) {
 		this.setDocument( value )
 	}
 	
-	get document(): T | undefined {
+	get document(): T {
 		return this._document
 	}
 
@@ -250,7 +256,7 @@ export abstract class CrudController<T extends EntropicComponent> {
 	protected onChangeHdl: Observable<CrudControllerEvent<T>> = new Observable<CrudControllerEvent<T>>()
 	protected onErrorHdl: Observable<Error> = new Observable<Error>()
 	private _model: Model<T> | undefined
-	private _document: T | undefined
+	private _document!: T
 	private unsubscribeDocument: Unsubscriber | undefined
 	private _filter: (( document: T ) => boolean ) | undefined
 	private validator = {} as ValidatorCollection<T>
