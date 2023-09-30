@@ -1,3 +1,16 @@
+# [4.0.0](https://github.com/entropic-bond/crud-panel/compare/v3.11.0...v4.0.0) (2023-09-30)
+
+
+### Bug Fixes
+
+* document is always defined ([809aa2d](https://github.com/entropic-bond/crud-panel/commit/809aa2d3650432d5b4efa82a60675e243577d966))
+* remove irrelevant test ([e8967a5](https://github.com/entropic-bond/crud-panel/commit/e8967a599b9ac10fbf90855d455da4f30476fdf0))
+
+
+### BREAKING CHANGES
+
+* findDocs to return Query type
+
 # [3.11.0](https://github.com/entropic-bond/crud-panel/compare/v3.10.5...v3.11.0) (2023-09-30)
 
 

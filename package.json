@@ -1,6 +1,6 @@
 {
   "name": "@entropic-bond/crud-panel",
-  "version": "3.11.0",
+  "version": "4.0.0",
   "publishConfig": {
     "access": "public",
     "branches": [
