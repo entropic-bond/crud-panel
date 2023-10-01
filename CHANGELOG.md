@@ -1,3 +1,10 @@
+## [4.0.2](https://github.com/entropic-bond/crud-panel/compare/v4.0.1...v4.0.2) (2023-10-01)
+
+
+### Bug Fixes
+
+* documentCollection to use Query or array promises ([a3f0fd3](https://github.com/entropic-bond/crud-panel/commit/a3f0fd3e3751ad0b9c7c78de64b21da3d4315e4c))
+
 ## [4.0.1](https://github.com/entropic-bond/crud-panel/compare/v4.0.0...v4.0.1) (2023-09-30)
 
 
