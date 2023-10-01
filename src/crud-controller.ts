@@ -70,10 +70,15 @@ export abstract class CrudController<T extends EntropicComponent> {
 	}
 
 	/**
-	 * Override this method to customize the query used to retrieve the documents.
+	 * Override this method to customize the query used to retrieve the documents 
+	 * in the documentCollection method. This is the default method used by 
+	 * the documentCollection method. If the findDocs method is overridden and returns
+	 * non undefined value, then this queryDocs method will not be used.
 	 * 
 	 * @param limit the maximum number of documents to retrieve
 	 * @returns a query to retrieve the documents
+	 * @see documentCollection
+	 * @see findDocs
 	 */
 	protected queryDocs( limit?: number ): Query<T> {
 		let query = this.model.find()
@@ -84,14 +89,19 @@ export abstract class CrudController<T extends EntropicComponent> {
 	}
 
 	/**
-	 * Override this method to customize the query used to retrieve the documents.
+	 * Override this method to customize the query used to retrieve the documents 
+	 * in the documentCollection method. The default method called by the 
+	 * documentCollection method is the queryDocs method. If this findDocs method 
+	 * returns a non undefined value, then this method will be used instead of the
+	 * queryDocs method.
 	 * 
 	 * @param limit the maximum number of documents to retrieve
 	 * @returns a query to retrieve the documents
-	 * @deprecated use `queryDocs` instead
+	 * @see documentCollection
+	 * @see queryDocs
 	 */
-	protected findDocs( limit?: number ): Query<T> {
-		return this.queryDocs( limit )
+	protected findDocs( limit?: number ): Promise<T[]> | undefined {
+		return undefined
 	}
 
 	/**
@@ -188,7 +198,9 @@ export abstract class CrudController<T extends EntropicComponent> {
 		
 		try {
 			this.progressController.notifyBusy( true, progressStage )
-			found = await this.queryDocs( limit ).get()
+			const docPromise = this.findDocs( limit )
+			if ( docPromise ) found = await docPromise
+			else found = await this.queryDocs( limit ).get()
 		}
 		catch( error ) {
 			this.onChangeHdl.notify({ error: this.errorToError( error ) })
