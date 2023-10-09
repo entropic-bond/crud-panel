@@ -10,7 +10,7 @@
     "rootDir": "src/",
 		"resolveJsonModule": true,
     "lib": [
-      "esnext"
+      "esnext", "DOM"
     ],
     "declaration": true,
     "experimentalDecorators": true,
@@ -28,5 +28,5 @@
       "@testing-library/jest-dom"
     ]
 	},
-  "include": ["./src", "../jest-addons/setup-tests.ts"]
+  "include": ["./src"]
 }
