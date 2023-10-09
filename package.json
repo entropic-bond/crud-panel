@@ -23,7 +23,7 @@
     "lib"
   ],
   "scripts": {
-    "test": "jest",
+    "test": "vitest",
     "build": "npm run build-cjs",
     "prepare": "npm run build",
     "build-ts": "cp -r ./src/ ./lib",
@@ -61,7 +61,8 @@
     "react-dom": "^18.2.0",
     "semantic-release": "^22.0.5",
     "ts-jest": "^29.1.1",
-    "typescript": "^5.2.2"
+    "typescript": "^5.2.2",
+    "vitest": "^0.34.6"
   },
   "husky": {
     "hooks": {

@@ -1,11 +1,12 @@
+import { Mock } from 'vitest'
 import { ProgressController, ProgressEvent } from './progress-controller'
 
 describe( 'Progress Controller', ()=>{
-	let observer: jest.Mock
+	let observer: Mock
 	let controller: ProgressController
 
 	beforeEach(()=>{
-		observer = jest.fn()
+		observer = vi.fn()
 		controller = new ProgressController()
 		controller.onProgress( observer )
 	})

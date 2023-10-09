@@ -1,5 +1,6 @@
 import { EntropicComponent, JsonDataSource, Model, persistent, registerPersistentClass, required, Store } from 'entropic-bond'
 import { CrudController, CrudControllerEvent } from './crud-controller'
+import { Mock } from 'vitest'
 
 const mockData = {
 	Test: {
@@ -58,13 +59,13 @@ export class TestController extends CrudController<Test> {
 describe( 'Crud Controller', ()=>{
 	let controller: TestController
 	let datasource: JsonDataSource
-	let onProgress: jest.Mock
+	let onProgress: Mock
 
 	beforeEach(()=>{
 		datasource = new JsonDataSource(JSON.parse(JSON.stringify( mockData )))
 		Store.useDataSource( datasource )
 		controller = new TestController()
-		onProgress = jest.fn()
+		onProgress = vi.fn()
 		controller.onProgress( onProgress )
 	})
 
@@ -91,7 +92,7 @@ describe( 'Crud Controller', ()=>{
 	})
 
 	it( 'should notify new event', ()=>{
-		const spy = jest.fn()
+		const spy = vi.fn()
 		controller.onChange( spy )
 		controller.notifyNewEvent()
 
@@ -99,7 +100,7 @@ describe( 'Crud Controller', ()=>{
 	})
 
 	it( 'should notify on filter set', async ()=>{
-		const spy = jest.fn()
+		const spy = vi.fn()
 		controller.onChange( spy )
 		await controller.setFilter( ()=>true )
 
@@ -152,28 +153,28 @@ describe( 'Crud Controller', ()=>{
 		describe( 'with observable', ()=>{
 		
 			it( 'should notify of an error on managedThrow', ()=>{
-				const spy = jest.fn()
+				const spy = vi.fn()
 				controller.onError( spy )
 				controller.callManagedThrow()
 				expect( spy ).toHaveBeenCalledWith( Error( 'test error' ) )
 			})
 			
 			it( 'should notify of an error on deleteDocument', async ()=>{
-				const spy = jest.fn()
+				const spy = vi.fn()
 				controller.onError( spy )
 				await controller.deleteDocument()
 				expect( spy ).toHaveBeenCalledWith( Error( 'delete test error' ) )
 			})
 		
 			it( 'should notify of an error on storeDocument', async ()=>{
-				const spy = jest.fn()
+				const spy = vi.fn()
 				controller.onError( spy )
 				await controller.storeDocument()
 				expect( spy ).toHaveBeenCalledWith( Error( 'store test error' ) )
 			})
 		
 			it( 'should notify of an error on documentCollection', async ()=>{
-				const spy = jest.fn()
+				const spy = vi.fn()
 				controller.onError( spy )
 				await controller.documentCollection()
 				expect( spy ).toHaveBeenCalledWith( Error( 'find test error' ) )

@@ -1,10 +1,11 @@
 import React, { Component } from 'react'
-import { act, render, RenderResult, screen, waitFor, within } from '@testing-library/react'
-import userEvent from '@testing-library/user-event'
+import { Mock } from 'vitest'
 import { JsonDataSource, Store } from 'entropic-bond'
-import { CrudContentViewProps, CrudPanel, CrudPanelLabels, CrudCardProps, Layout } from './crud-panel'
 import { CrudController } from './crud-controller'
 import { Test, TestController } from './crud-controller.spec'
+import { CrudPanelLabels, CrudContentViewProps, CrudCardProps, CrudPanel, Layout } from './crud-panel'
+import { RenderResult, act, render, screen, waitFor, within } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 
 const crudLabels: CrudPanelLabels = {
 	addNewDocumentLabel: 'Add new document',
@@ -82,7 +83,7 @@ class TestCard extends Component<Partial<CrudCardProps<Test>>> {
 
 describe( 'Crud Panel', ()=>{
 	let controller: TestController
-	let notifySpy: jest.Mock<any, any>
+	let notifySpy: Mock<any, any>
 	let renderResult: RenderResult
 	let datasource: JsonDataSource
 
@@ -90,7 +91,7 @@ describe( 'Crud Panel', ()=>{
 		datasource = new JsonDataSource( JSON.parse( JSON.stringify( mockData )))
 		Store.useDataSource( datasource )
 		controller = new TestController()
-		notifySpy = jest.fn()
+		notifySpy = vi.fn()
 		controller.onChange( notifySpy )
 
 		await act( async ()=>{
@@ -104,8 +105,6 @@ describe( 'Crud Panel', ()=>{
 				</CrudPanel>
 			)
 		})
-		// await datasource.wait()
-		// await screen.findByRole( 'heading' )
 	})
 
 	it( 'should show add button', ()=>{
