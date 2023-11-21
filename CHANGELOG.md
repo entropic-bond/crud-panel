@@ -1,3 +1,10 @@
+## [4.0.3](https://github.com/entropic-bond/crud-panel/compare/v4.0.2...v4.0.3) (2023-11-21)
+
+
+### Bug Fixes
+
+* Update dependencies and add prop validator ([9015529](https://github.com/entropic-bond/crud-panel/commit/9015529aac52e06f842d0a93967760456ac27caf))
+
 ## [4.0.2](https://github.com/entropic-bond/crud-panel/compare/v4.0.1...v4.0.2) (2023-10-01)
 
 
