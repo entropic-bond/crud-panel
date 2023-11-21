@@ -1,4 +1,4 @@
-import { EntropicComponent, JsonDataSource, Model, persistent, registerPersistentClass, required, Store } from 'entropic-bond'
+import { EntropicComponent, JsonDataSource, Model, persistent, registerPersistentClass, required, requiredWithValidator, Store } from 'entropic-bond'
 import { CrudController, CrudControllerEvent } from './crud-controller'
 import { Mock } from 'vitest'
 
@@ -27,7 +27,16 @@ export class Test extends EntropicComponent {
 		return this._testProp
 	}
 
+	set testPropWithValidator( value: string | undefined ) {
+		this.changeProp( 'testPropWithValidator', value )
+	}
+	
+	get testPropWithValidator(): string | undefined {
+		return this._testPropWithValidator
+	}
+	
 	@required @persistent private _testProp: string | undefined
+	@requiredWithValidator(val => !!val && val?.length > 3 ) @persistent private _testPropWithValidator: string | undefined
 }
 
 interface TestControllerEvent extends CrudControllerEvent<Test> {
@@ -126,10 +135,10 @@ describe( 'Crud Controller', ()=>{
 			controller.setDocument( new Test() )
 		})
 
-		afterEach(()=>datasource.simulateError( undefined ))
+		afterEach( ()=>datasource.simulateError( undefined ) as any )
 
 		describe( 'without observable', ()=>{
-			beforeEach(()=>controller.setDocument( new Test() ))
+			beforeEach(()=>controller.setDocument( new Test() ) as any )
 			
 			it( 'should throw on managedThrow', ()=>{
 				expect(()=>{
@@ -190,18 +199,30 @@ describe( 'Crud Controller', ()=>{
 
 		it( 'should return true if all required properties are filled', ()=>{
 			controller.document!.testProp = 'test'
+			controller.document!.testPropWithValidator = 'test'
 			expect( controller.allRequiredPropertiesFilled() ).toBe( true )
 		})
 
 		it( 'should retrieve required properties', ()=>{
-			expect( controller.requiredProperties ).toEqual( ['testProp'] )
+			expect( controller.requiredProperties ).toEqual( ['testProp', 'testPropWithValidator'] )
 		})
 
 		it( 'should work with registered prop validator', ()=>{
-			controller.addValidator( 'testProp', ( value )=>value === 'test' )
-			expect( controller.allRequiredPropertiesFilled() ).toBe( false )
+			controller.addValidator( 'testProp', ( value )=>value === 'validatedTest' )
 			controller.document!.testProp = 'test'
+			controller.document!.testPropWithValidator = 'test'
+			expect( controller.allRequiredPropertiesFilled() ).toBe( false )
+			controller.document!.testProp = 'validatedTest'
 			expect( controller.allRequiredPropertiesFilled() ).toBe( true )
+		})
+
+		it( 'should work with decorator prop validator', ()=>{
+			controller.document!.testProp = 'test'
+			controller.document!.testPropWithValidator = 't'
+			expect( controller.allRequiredPropertiesFilled() ).toBe( false )
+			controller.document!.testPropWithValidator = 'validatedTest'
+			expect( controller.allRequiredPropertiesFilled() ).toBe( true )
+
 		})
 	})
 })

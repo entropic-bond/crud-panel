@@ -40,7 +40,7 @@ export abstract class CrudController<T extends EntropicComponent> {
 		if ( !this.document ) throw new Error( CrudController.errorMessages.missedDocument )
 
 		return this.document.getPersistentProperties()
-			.filter( prop => prop.required )
+			.filter( prop => this.document.isRequired( prop.name as ClassPropNames<T> ) )
 			.map( prop => prop.name ) as ClassPropNames<T>[]
 	}
 
@@ -56,7 +56,9 @@ export abstract class CrudController<T extends EntropicComponent> {
 		if ( !this.document ) throw new Error( CrudController.errorMessages.missedDocument )
 
 		const propVal = this.document[ prop ]
-		return this.validator[ prop ]? !this.validator[ prop ]( propVal ) : !propVal
+
+		if ( this.validator[ prop ] ) return !this.validator[ prop ]( propVal )
+		return !this.document.isPropValueValid( prop )
 	}
 
 	protected storeDoc(): Promise<void> {
