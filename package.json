@@ -34,7 +34,7 @@
     "url": "git+https://github.com/entropic-bond/crud-panel.git"
   },
   "keywords": [
-    "menu",
+    "crud",
     "react"
   ],
   "author": "Josep Seto",
@@ -46,20 +46,20 @@
   "devDependencies": {
     "@semantic-release/changelog": "^6.0.3",
     "@semantic-release/git": "^10.0.1",
-    "@testing-library/jest-dom": "^6.1.4",
+    "@testing-library/jest-dom": "^6.2.0",
     "@testing-library/react": "^14.1.2",
-    "@testing-library/user-event": "^14.5.1",
-    "@types/react": "^18.2.38",
-    "@types/react-dom": "^18.2.16",
+    "@testing-library/user-event": "^14.5.2",
+    "@types/react": "^18.2.47",
+    "@types/react-dom": "^18.2.18",
     "fetch-mock": "^9.11.0",
     "git-branch-is": "^4.0.0",
     "happy-dom": "^12.10.3",
     "husky": "^8.0.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "semantic-release": "^22.0.8",
-    "typescript": "^5.3.2",
-    "vitest": "^0.34.6"
+    "semantic-release": "^22.0.12",
+    "typescript": "^5.3.3",
+    "vitest": "^1.1.3"
   },
   "husky": {
     "hooks": {
