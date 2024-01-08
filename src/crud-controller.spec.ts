@@ -222,7 +222,12 @@ describe( 'Crud Controller', ()=>{
 			expect( controller.allRequiredPropertiesFilled() ).toBe( false )
 			controller.document!.testPropWithValidator = 'validatedTest'
 			expect( controller.allRequiredPropertiesFilled() ).toBe( true )
+		})
 
+		it( 'should retrieve validator errors', ()=>{
+			controller.addValidator( 'testProp', ( value )=>value === 'validatedTest', 'testPropError' )
+			controller.document!.testPropWithValidator = 't'
+			expect( controller.failedValidationError( 'testProp' ) ).toEqual( 'testPropError' )
 		})
 	})
 })

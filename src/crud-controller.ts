@@ -13,7 +13,10 @@ export interface CrudControllerEvent<T extends EntropicComponent> {
 
 type ValidatorFunction<V> = ( value: V ) => boolean 
 type ValidatorCollection<T extends EntropicComponent> = {
-	[ prop in ClassPropNames<T> ]: ValidatorFunction<T[prop]>
+	[ prop in ClassPropNames<T> ]: {
+		func: ValidatorFunction<T[prop]>
+		errorMessage?: string
+	}
 }
 
 export abstract class CrudController<T extends EntropicComponent> {
@@ -44,12 +47,19 @@ export abstract class CrudController<T extends EntropicComponent> {
 			.map( prop => prop.name ) as ClassPropNames<T>[]
 	}
 
-	addValidator<P extends ClassPropNames<T>>( prop: P, validatorFn: ValidatorFunction<T[P]> ) {
-		this.validator[ prop ] = validatorFn
+	addValidator<P extends ClassPropNames<T>>( prop: P, validatorFn: ValidatorFunction<T[P]>, errorMessage?: string ) {
+		this.validator[ prop ] = {
+			func: validatorFn,
+			errorMessage
+		}
 	}
 
 	removeValidator( prop: ClassPropNames<T> ) {
 		delete this.validator[ prop ]
+	}
+
+	failedValidationError( prop: ClassPropNames<T> ): string | undefined {
+		return this.validator[ prop ]?.errorMessage
 	}
 
 	private validateProp( prop: ClassPropNames<T> ): boolean {
@@ -57,7 +67,7 @@ export abstract class CrudController<T extends EntropicComponent> {
 
 		const propVal = this.document[ prop ]
 
-		if ( this.validator[ prop ] ) return !this.validator[ prop ]( propVal )
+		if ( this.validator[ prop ] ) return !this.validator[ prop ].func( propVal )
 		return !this.document.isPropValueValid( prop )
 	}
 
