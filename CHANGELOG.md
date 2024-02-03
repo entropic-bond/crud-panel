@@ -1,3 +1,10 @@
+## [4.0.4](https://github.com/entropic-bond/crud-panel/compare/v4.0.3...v4.0.4) (2024-01-08)
+
+
+### Bug Fixes
+
+* Add validation error retrieval functionality to CrudController ([c1fead7](https://github.com/entropic-bond/crud-panel/commit/c1fead7b44b7b0c999ece78fb27ee644bd86e8ce))
+
 ## [4.0.3](https://github.com/entropic-bond/crud-panel/compare/v4.0.2...v4.0.3) (2023-11-21)
 
 
