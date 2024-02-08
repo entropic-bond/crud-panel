@@ -1,3 +1,10 @@
+# [4.1.0](https://github.com/entropic-bond/crud-panel/compare/v4.0.4...v4.1.0) (2024-02-08)
+
+
+### Features
+
+* esm and cjs ([0795149](https://github.com/entropic-bond/crud-panel/commit/0795149bb6175cf826f2d423c6b90506e36effad))
+
 ## [4.0.4](https://github.com/entropic-bond/crud-panel/compare/v4.0.3...v4.0.4) (2024-01-08)
 
 
