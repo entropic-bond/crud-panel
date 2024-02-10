@@ -1,3 +1,10 @@
+## [4.1.1](https://github.com/entropic-bond/crud-panel/compare/v4.1.0...v4.1.1) (2024-02-10)
+
+
+### Bug Fixes
+
+* sourcemap ([b0d1e52](https://github.com/entropic-bond/crud-panel/commit/b0d1e52156114a7e793c564efe748c55ddf0a97a))
+
 # [4.1.0](https://github.com/entropic-bond/crud-panel/compare/v4.0.4...v4.1.0) (2024-02-08)
 
 
