@@ -15,7 +15,8 @@ export default defineConfig({
 			name: 'entropic-bond-crud-panel',
 			fileName: 'entropic-bond-crud-panel'
 		},
-		"outDir": "lib",
+		sourcemap: true,
+		outDir: 'lib',
 	},
 	plugins: [
 		dts()
