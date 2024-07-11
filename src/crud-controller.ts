@@ -44,7 +44,8 @@ export abstract class CrudController<T extends EntropicComponent> {
 
 		return this.document.getPersistentProperties()
 			.filter( prop => this.document.isRequired( prop.name as ClassPropNames<T> ) )
-			.map( prop => prop.name ) as ClassPropNames<T>[]
+			.map( prop => prop.name )
+			.concat( Object.keys( this.validator )) as ClassPropNames<T>[]
 	}
 
 	addValidator<P extends ClassPropNames<T>>( prop: P, validatorFn: ValidatorFunction<T[P]>, errorMessage?: string ) {

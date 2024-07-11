@@ -34,7 +34,16 @@ export class Test extends EntropicComponent {
 	get testPropWithValidator(): string | undefined {
 		return this._testPropWithValidator
 	}
+
+	set testPropWithControllerValidator( value: number ) {
+		this._testPropWithControllerValidator = value
+	}
 	
+	get testPropWithControllerValidator(): number {
+		return this._testPropWithControllerValidator
+	}
+	
+	private _testPropWithControllerValidator: number = 0
 	@required @persistent private _testProp: string | undefined
 	@requiredWithValidator(val => !!val && val?.length > 3 ) @persistent private _testPropWithValidator: string | undefined
 }
@@ -228,6 +237,23 @@ describe( 'Crud Controller', ()=>{
 			controller.addValidator( 'testProp', ( value )=>value === 'validatedTest', 'testPropError' )
 			controller.document!.testPropWithValidator = 't'
 			expect( controller.failedValidationError( 'testProp' ) ).toEqual( 'testPropError' )
+		})
+
+		it( 'should include required props set in controller', ()=>{
+			controller.addValidator( 'testPropWithControllerValidator', v => v > 3 )
+
+			expect( controller.requiredProperties ).toEqual(['testProp', 'testPropWithValidator', 'testPropWithControllerValidator' ])
+			expect( controller.nonFilledRequiredProperties ).toEqual(['testProp', 'testPropWithValidator', 'testPropWithControllerValidator' ])
+		})
+
+		it( 'should validate props with controller validator', ()=>{
+			controller.addValidator( 'testPropWithControllerValidator', v => v > 3 )
+			controller.document!.testProp = '_foo'
+			controller.document!.testPropWithValidator = '_bar'
+			expect( controller.nonFilledRequiredProperties ).toEqual(['testPropWithControllerValidator'])
+			
+			controller.document!.testPropWithControllerValidator = 4
+			expect( controller.nonFilledRequiredProperties ).toEqual([])
 		})
 	})
 })
