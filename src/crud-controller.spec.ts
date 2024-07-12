@@ -255,5 +255,12 @@ describe( 'Crud Controller', ()=>{
 			controller.document!.testPropWithControllerValidator = 4
 			expect( controller.nonFilledRequiredProperties ).toEqual([])
 		})
+
+		it( 'should report validate props only once', ()=>{
+			controller.addValidator( 'testProp', v => v === '3' )
+			controller.document!.testProp = '_foo'
+			controller.document!.testPropWithValidator = '_bar'
+			expect( controller.nonFilledRequiredProperties ).toEqual(['testProp'])
+		})
 	})
 })
