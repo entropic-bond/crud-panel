@@ -1,3 +1,10 @@
+## [4.1.2](https://github.com/entropic-bond/crud-panel/compare/v4.1.1...v4.1.2) (2024-07-11)
+
+
+### Bug Fixes
+
+* add to requiredProperties the props with added validators ([e4249b7](https://github.com/entropic-bond/crud-panel/commit/e4249b76809f92bce2654ff10845a6a38fdfa1a2))
+
 ## [4.1.1](https://github.com/entropic-bond/crud-panel/compare/v4.1.0...v4.1.1) (2024-02-10)
 
 
