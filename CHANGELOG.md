@@ -1,3 +1,10 @@
+## [4.1.3](https://github.com/entropic-bond/crud-panel/compare/v4.1.2...v4.1.3) (2024-07-12)
+
+
+### Bug Fixes
+
+* remove duplicated required props ([43b7615](https://github.com/entropic-bond/crud-panel/commit/43b7615050c2bccfe7e2b13b66ef241ee3d54436))
+
 ## [4.1.2](https://github.com/entropic-bond/crud-panel/compare/v4.1.1...v4.1.2) (2024-07-11)
 
 
