@@ -37,12 +37,22 @@ export class ProgressController {
 		})
 
 		if ( overallProgress >= 1 ) this._stages = {}
+		if ( this.debug ) console.log( `ProgressController ${ stage.name }: Progress: ${ stage.progress } Stages: ${ stage.total }` )
 	}
 
 	onProgress( cb: Callback<ProgressEvent> ) {
 		return this._onProgress.subscribe( cb )
 	}
 
+	set debug( value: boolean ) {
+		this._debug = value
+	}
+	
+	get debug(): boolean {
+		return this._debug
+	}
+	
+	private _debug: boolean = false
 	private _stages: ProgressStageCollection = {}
 	private _onProgress: Observable<ProgressEvent> = new Observable<ProgressEvent>()
 }
