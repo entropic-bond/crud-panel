@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import { Mock } from 'vitest'
 import { JsonDataSource, Store } from 'entropic-bond'
 import { CrudController } from './crud-controller'
@@ -83,7 +83,7 @@ class TestCard extends Component<Partial<CrudCardProps<Test>>> {
 
 describe( 'Crud Panel', ()=>{
 	let controller: TestController
-	let notifySpy: Mock<any, any>
+	let notifySpy: Mock
 	let renderResult: RenderResult
 	let datasource: JsonDataSource
 

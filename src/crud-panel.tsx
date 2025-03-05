@@ -1,5 +1,5 @@
 import { EntropicComponent, snakeCase, Unsubscriber } from 'entropic-bond'
-import React, { cloneElement, Component, ReactElement } from 'react'
+import { cloneElement, Component, ReactElement, JSX } from 'react'
 import { CrudController } from './crud-controller'
 
 enum Mode { normal, add, edit }

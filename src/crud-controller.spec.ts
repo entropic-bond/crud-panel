@@ -156,15 +156,15 @@ describe( 'Crud Controller', ()=>{
 			})
 
 			it( 'should reject of an error on deleteDocument', async ()=>{
-				expect( controller.deleteDocument() ).rejects.toThrow( 'delete test error' )
+				await expect( controller.deleteDocument() ).rejects.toThrow( 'delete test error' )
 			})
 		
 			it( 'should reject of an error on storeDocument', async ()=>{
-				expect( controller.storeDocument() ).rejects.toThrow( 'store test error' )
+				await expect( controller.storeDocument() ).rejects.toThrow( 'store test error' )
 			})
 		
 			it( 'should reject of an error on documentCollection', async ()=>{
-				expect( controller.documentCollection() ).rejects.toThrow( 'find test error' )
+				await expect( controller.documentCollection() ).rejects.toThrow( 'find test error' )
 			})
 		})
 
