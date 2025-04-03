@@ -233,6 +233,16 @@ describe( 'Crud Controller', ()=>{
 			expect( controller.allRequiredPropertiesFilled() ).toBe( true )
 		})
 
+		it( 'should work with global validator', ()=>{
+			controller.addGlobalValidator( obj => obj.testProp === 'validatedTest', 'globalError' )
+			controller.document!.testProp = 'test'
+			controller.document!.testPropWithValidator = 'test'
+			expect( controller.allRequiredPropertiesFilled() ).toBe( false )
+			expect( controller.failedValidationError() ).toEqual( 'globalError' )
+			controller.document!.testProp = 'validatedTest'
+			expect( controller.allRequiredPropertiesFilled() ).toBe( true )
+		})
+
 		it( 'should retrieve validator errors', ()=>{
 			controller.addValidator( 'testProp', ( value )=>value === 'validatedTest', 'testPropError' )
 			controller.document!.testPropWithValidator = 't'

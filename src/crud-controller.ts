@@ -11,6 +11,11 @@ export interface CrudControllerEvent<T extends EntropicComponent> {
 	/** deprecated */	error?: Error 
 }
 
+interface GlobalValidator<T extends EntropicComponent> {
+	func: ( document: T ) => boolean
+	errorMessage?: string
+}
+
 type ValidatorFunction<V> = ( value: V ) => boolean 
 type ValidatorCollection<T extends EntropicComponent> = {
 	[ prop in ClassPropNames<T> ]: {
@@ -32,7 +37,7 @@ export abstract class CrudController<T extends EntropicComponent> {
 	protected abstract getModel(): Model<T> 
 	
 	allRequiredPropertiesFilled(): boolean {
-		return this.nonFilledRequiredProperties.length <= 0
+		return this.nonFilledRequiredProperties.length <= 0 && this.validateGlobal()
 	}
 
 	get nonFilledRequiredProperties(): ClassPropNames<T>[] {
@@ -61,8 +66,23 @@ export abstract class CrudController<T extends EntropicComponent> {
 		delete this.validator[ prop ]
 	}
 
-	failedValidationError( prop: ClassPropNames<T> ): string | undefined {
-		return this.validator[ prop ]?.errorMessage
+	addGlobalValidator( validatorFn: ValidatorFunction<T>, errorMessage?: string ) {
+		this.globalValidator = {
+			func: validatorFn,
+			errorMessage
+		}
+	}
+
+	removeGlobalValidator() {
+		this.globalValidator = undefined
+	}
+
+	failedValidationError( prop?: ClassPropNames<T> ): string | undefined {
+		if ( prop ) return this.validator[ prop ]?.errorMessage
+
+		const nonFilledProperty = this.nonFilledRequiredProperties[0]
+		if ( nonFilledProperty ) return this.validator[ nonFilledProperty ]?.errorMessage
+		return this.globalValidator?.errorMessage
 	}
 
 	private validateProp( prop: ClassPropNames<T> ): boolean {
@@ -72,6 +92,13 @@ export abstract class CrudController<T extends EntropicComponent> {
 
 		if ( this.validator[ prop ] ) return !this.validator[ prop ].func( propVal )
 		return !this.document.isPropValueValid( prop )
+	}
+
+	private validateGlobal(): boolean {
+		if ( !this.document ) throw new Error( CrudController.errorMessages.missedDocument )
+
+		if ( this.globalValidator ) return this.globalValidator.func( this.document )
+		else return true
 	}
 
 	protected storeDoc(): Promise<void> {
@@ -298,4 +325,5 @@ export abstract class CrudController<T extends EntropicComponent> {
 	private unsubscribeDocument: Unsubscriber | undefined
 	private _filter: (( document: T ) => boolean ) | undefined
 	private validator = {} as ValidatorCollection<T>
+	private globalValidator: GlobalValidator<T> | undefined
 }
