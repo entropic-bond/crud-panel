@@ -1,3 +1,10 @@
+## [4.2.1](https://github.com/entropic-bond/crud-panel/compare/v4.2.0...v4.2.1) (2025-03-05)
+
+
+### Bug Fixes
+
+* update entropic-bond ([57c3d0a](https://github.com/entropic-bond/crud-panel/commit/57c3d0a1ce0318614f37c3b386e62e65710bc087))
+
 # [4.2.0](https://github.com/entropic-bond/crud-panel/compare/v4.1.3...v4.2.0) (2024-08-21)
 
 
