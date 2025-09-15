@@ -1,3 +1,10 @@
+## [4.3.1](https://github.com/entropic-bond/crud-panel/compare/v4.3.0...v4.3.1) (2025-09-15)
+
+
+### Bug Fixes
+
+* model not to be stored internally ([ef0c5b4](https://github.com/entropic-bond/crud-panel/commit/ef0c5b46b7621b8ddb305696cdd48c64f3b17dbd))
+
 # [4.3.0](https://github.com/entropic-bond/crud-panel/compare/v4.2.1...v4.3.0) (2025-04-03)
 
 
