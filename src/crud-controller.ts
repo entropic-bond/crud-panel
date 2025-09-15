@@ -265,7 +265,7 @@ export abstract class CrudController<T extends EntropicComponent> {
 	}
 
 	protected get model() {
-		return this._model || ( this._model = this.getModel() )
+		return this.getModel()
 	}
 
 	setDocument( value: T ): this {
@@ -320,7 +320,6 @@ export abstract class CrudController<T extends EntropicComponent> {
 	protected progressController: ProgressController = new ProgressController()
 	protected onChangeHdl: Observable<CrudControllerEvent<T>> = new Observable<CrudControllerEvent<T>>()
 	protected onErrorHdl: Observable<Error> = new Observable<Error>()
-	private _model: Model<T> | undefined
 	private _document!: T
 	private unsubscribeDocument: Unsubscriber | undefined
 	private _filter: (( document: T ) => boolean ) | undefined
