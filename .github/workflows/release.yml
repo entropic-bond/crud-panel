@@ -5,6 +5,12 @@ on:
     branches:
       - "master"
 
+permissions:
+  contents: write
+  packages: write
+  issues: write
+  id-token: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
