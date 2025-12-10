@@ -250,6 +250,7 @@ export abstract class CrudController<T extends EntropicComponent> {
 			if ( this.throwOnError ) throw error
 		}
 		finally {
+			this.onChangeHdl.notify({	documentCollection: found	})
 			this.progressController.notifyBusy( false, progressStage )
 		}
 
