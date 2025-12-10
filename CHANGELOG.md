@@ -1,3 +1,10 @@
+# [4.4.0](https://github.com/entropic-bond/crud-panel/compare/v4.3.1...v4.4.0) (2025-12-10)
+
+
+### Features
+
+* notify on documentCollection call ([9873f2f](https://github.com/entropic-bond/crud-panel/commit/9873f2fa48118b47dc751dc9726f43b40a4d9e8a))
+
 ## [4.3.1](https://github.com/entropic-bond/crud-panel/compare/v4.3.0...v4.3.1) (2025-09-15)
 
 
