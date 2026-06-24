@@ -241,6 +241,7 @@ describe( 'Crud Controller', ()=>{
 			expect( controller.failedValidationError() ).toEqual( 'globalError' )
 			controller.document!.testProp = 'validatedTest'
 			expect( controller.allRequiredPropertiesFilled() ).toBe( true )
+			expect( controller.failedValidationError() ).toBeUndefined()
 		})
 
 		it( 'should retrieve validator errors', ()=>{

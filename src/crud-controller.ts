@@ -82,7 +82,7 @@ export abstract class CrudController<T extends EntropicComponent> {
 
 		const nonFilledProperty = this.nonFilledRequiredProperties[0]
 		if ( nonFilledProperty ) return this.validator[ nonFilledProperty ]?.errorMessage
-		return this.globalValidator?.errorMessage
+		if ( !this.validateGlobal() ) return this.globalValidator?.errorMessage
 	}
 
 	private validateProp( prop: ClassPropNames<T> ): boolean {
