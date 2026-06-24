@@ -361,10 +361,10 @@ describe( 'Crud Panel', ()=>{
 
 		it( 'should allow to pass labels as a function', async ()=>{
 			const labels = ( controller: CrudController<Test> ) => Object.entries( crudLabels )
-			.reduce( ( prev, [ key, label ] ) => {
+			.reduce( ( prev: Record<string, string>, [ key, label ] ) => {
 				prev[ key ] = `${ label } ${ controller.document?.className }`
 				return prev
-			},{}) as CrudPanelLabels
+			}, {} as Record<string, string>) as unknown as CrudPanelLabels
 			
 			renderResult.rerender(
 				<CrudPanel controller={ controller } labels={ labels }>
