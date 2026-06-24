@@ -1,3 +1,10 @@
+## [4.4.6](https://github.com/entropic-bond/crud-panel/compare/v4.4.5...v4.4.6) (2026-06-24)
+
+
+### Bug Fixes
+
+* failedValidationError ([9caf178](https://github.com/entropic-bond/crud-panel/commit/9caf178d0ccd32641d4e5144dd38d6d6d1aa1739))
+
 ## [4.4.5](https://github.com/entropic-bond/crud-panel/compare/v4.4.4...v4.4.5) (2026-03-12)
 
 
