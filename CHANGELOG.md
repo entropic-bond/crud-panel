@@ -1,3 +1,10 @@
+## [4.4.8](https://github.com/entropic-bond/crud-panel/compare/v4.4.7...v4.4.8) (2026-06-30)
+
+
+### Bug Fixes
+
+* bump ts 6.x.x ([1a00513](https://github.com/entropic-bond/crud-panel/commit/1a005138e2d9b28b2a0a2388c16da50de5b1f792))
+
 ## [4.4.7](https://github.com/entropic-bond/crud-panel/compare/v4.4.6...v4.4.7) (2026-06-24)
 
 
