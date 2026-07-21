@@ -1,3 +1,10 @@
+## [4.5.1](https://github.com/entropic-bond/crud-panel/compare/v4.5.0...v4.5.1) (2026-07-21)
+
+
+### Bug Fixes
+
+* update constructor to handle optional document parameter ([96d6071](https://github.com/entropic-bond/crud-panel/commit/96d6071c7c6ee9ae92792c03f50bb64df0ba645d))
+
 # [4.5.0](https://github.com/entropic-bond/crud-panel/compare/v4.4.9...v4.5.0) (2026-07-21)
 
 
