@@ -30,7 +30,7 @@ export abstract class CrudController<T extends EntropicComponent> {
 	}
 
 	constructor( document?: T ) {
-		this.setDocument( this.createDocument( document ) )
+		this.setDocument( document ?? this.createDocument() )
 	}
 
 	protected abstract createDocument( document?: T ): T 
