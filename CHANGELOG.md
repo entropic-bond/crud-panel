@@ -1,3 +1,10 @@
+# [4.5.0](https://github.com/entropic-bond/crud-panel/compare/v4.4.9...v4.5.0) (2026-07-21)
+
+
+### Features
+
+* add agent guide and improve document creation in CrudController ([fc52141](https://github.com/entropic-bond/crud-panel/commit/fc52141833070c66f8ff9a04d76f9829b29d39f1))
+
 ## [4.4.9](https://github.com/entropic-bond/crud-panel/compare/v4.4.8...v4.4.9) (2026-07-01)
 
 
