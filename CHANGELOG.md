@@ -1,3 +1,10 @@
+## [4.5.2](https://github.com/entropic-bond/crud-panel/compare/v4.5.1...v4.5.2) (2026-10-06)
+
+
+### Bug Fixes
+
+* **deps:** bump entropic-bond to ^2.0.4 ([#2](https://github.com/entropic-bond/crud-panel/issues/2)) ([5b67692](https://github.com/entropic-bond/crud-panel/commit/5b676925963311eec258e57fc456c56411608972)), closes [#1](https://github.com/entropic-bond/crud-panel/issues/1)
+
 ## [4.5.1](https://github.com/entropic-bond/crud-panel/compare/v4.5.0...v4.5.1) (2026-07-21)
 
 
